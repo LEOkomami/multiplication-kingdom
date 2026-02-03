@@ -1,0 +1,1813 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ממלכת הכפל, הרפתקה עם חיות</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #111a33;
+      --panel2: #0f1730;
+      --text: #e8ecff;
+      --muted: #aab3d6;
+      --good: #2bd576;
+      --bad: #ff4d6d;
+      --warn: #ffd166;
+      --cell: #18244a;
+      --cellDone: #1e3a66;
+      --cellHi: #2a3d7a;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --radius: 16px;
+      --gap: 12px;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      --accent: #ffd166;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glassBorder: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: radial-gradient(1000px 600px at 20% 0%, #1a2a66 0%, rgba(26, 42, 102, 0) 60%),
+        radial-gradient(900px 500px at 90% 10%, #3a1f66 0%, rgba(58, 31, 102, 0) 55%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 18px 24px 8px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .4px;
+      background: linear-gradient(90deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 12px 24px 26px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    @media (max-width: 1020px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02));
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid var(--glassBorder);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card .hd {
+      padding: 14px 14px 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(0, 0, 0, .12);
+      flex-wrap: wrap;
+    }
+
+    .card .bd {
+      padding: 14px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .btn:active {
+      transform: scale(.98);
+    }
+
+    .btn.primary {
+      border-color: rgba(43, 213, 118, .35);
+      background: rgba(43, 213, 118, .14);
+    }
+
+    .btn.danger {
+      border-color: rgba(255, 77, 109, .35);
+      background: rgba(255, 77, 109, .12);
+    }
+
+    .btn.warn {
+      border-color: rgba(255, 209, 102, .35);
+      background: rgba(255, 209, 102, .12);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pill b {
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .select {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      font-weight: 700;
+      outline: none;
+    }
+
+    .tiny {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .gridWrap {
+      padding: 14px;
+      overflow-x: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 64px repeat(10, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .cell {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 12px;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cell.head {
+      background: rgba(255, 255, 255, .08);
+      font-weight: 900;
+    }
+
+    .cell.corner {
+      background: rgba(255, 255, 255, .08);
+      font-weight: 900;
+    }
+
+    .cell.work {
+      background: rgba(255, 255, 255, .03);
+      border-color: rgba(255, 255, 255, .08);
+      cursor: pointer;
+      transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 4px;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .cell.work:hover {
+      background: rgba(42, 61, 122, .75);
+      border-color: rgba(255, 255, 255, .18);
+    }
+
+    .cell.work:active {
+      transform: scale(.985);
+    }
+
+    .cell.done {
+      background: rgba(30, 58, 102, .7);
+      border-color: rgba(43, 213, 118, .25);
+      color: rgba(232, 236, 255, .95);
+    }
+
+    .cell.hi {
+      outline: 2px solid rgba(255, 209, 102, .55);
+      outline-offset: 1px;
+    }
+
+    .cell .mini {
+      font-size: 16px;
+      color: var(--text);
+      font-weight: 1000;
+      line-height: 1.1;
+      display: block;
+    }
+
+    .cell .submini {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+
+    .cell.done .mini {
+      font-size: 24px;
+    }
+
+    .gameBox {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel {
+      background: rgba(0, 0, 0, .2);
+      border: 1px solid rgba(255, 255, 255, .05);
+      border-radius: 12px;
+      padding: 8px;
+    }
+
+    .qTop {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .qExpr {
+      font-size: 28px;
+      font-weight: 1000;
+      letter-spacing: .3px;
+    }
+
+    .qStory {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      min-height: 18px;
+    }
+
+    .answerRow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    input[type="number"] {
+      width: 150px;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 900;
+      outline: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: rgba(255, 209, 102, .5);
+      box-shadow: 0 0 0 4px rgba(255, 209, 102, .12);
+    }
+
+    .feedback {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .05);
+      font-weight: 900;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .feedback.good {
+      border-color: rgba(43, 213, 118, .35);
+      background: rgba(43, 213, 118, .12);
+    }
+
+    .feedback.bad {
+      border-color: rgba(255, 77, 109, .35);
+      background: rgba(255, 77, 109, .12);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .stat .k {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .stat .v {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 1000;
+    }
+
+    .collection {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .badge {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .10);
+      font-size: 12px;
+      color: rgba(232, 236, 255, .95);
+      font-weight: 900;
+    }
+
+    .badge span {
+      opacity: .9;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .kingdomGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      max-height: 60vh;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .kCell {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 14px;
+      padding: 12px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kEmoji {
+      font-size: 28px;
+    }
+
+    .kName {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .kFact {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .btn.icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .modalBack {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal {
+      width: min(640px, 100%);
+      background: rgba(17, 26, 51, 0.8);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes modalSlide {
+      from {
+        transform: translateY(30px) scale(0.95);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal .mhd {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, .12);
+    }
+
+    .modal .mbd {
+      padding: 14px;
+    }
+
+    .profiles {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .profiles {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .profileCard {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      cursor: pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .profileCard:hover {
+      background: rgba(255, 255, 255, .08);
+      border-color: rgba(255, 255, 255, .18);
+    }
+
+    .profileCard:active {
+      transform: scale(.99);
+    }
+
+    .pLeft {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .pName {
+      font-weight: 1000;
+    }
+
+    .pMeta {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .pActions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .formRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .textInput,
+    select {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 800;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    #newProfileName {
+      width: 220px;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: left 10px center;
+      padding-left: 40px;
+    }
+
+    option {
+      background-color: #111a33;
+      color: #fff;
+    }
+
+    .textInput:focus,
+    select:focus {
+      border-color: rgba(255, 209, 102, .5);
+      box-shadow: 0 0 0 4px rgba(255, 209, 102, .12);
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div>
+        <h1>ממלכת הכפל, הרפתקה עם חיות</h1>
+        <div class="sub">כובשים תאים בלוח הכפל, אוספים חיות פנטזיה, ושומרים התקדמות לכל פרופיל בנפרד.</div>
+      </div>
+      <div class="controls">
+        <span class="pill">שחקנית: <b id="activeProfileName">-</b></span>
+        <button class="btn icon" id="toggleSoundBtn" title="צלילים" type="button">🔊</button>
+        <button class="btn" id="profilesBtn" type="button">פרופילים</button>
+        <button class="btn danger" id="resetProfileBtn" type="button">איפוס פרופיל</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="hd">
+        <div class="controls">
+          <span class="pill">כיבוש: <b id="progressPct">0%</b></span>
+          <span class="pill">רצף נכון: <b id="streak">0</b></span>
+        </div>
+        <div class="controls">
+          <button class="btn primary" id="newRoundBtn" type="button">סבב חדש</button>
+        </div>
+      </div>
+
+      <div class="hd">
+        <div class="select">
+          <label class="tiny" for="maxN">עד איזה מספר?</label>
+          <select id="maxN">
+            <option value="10" selected>10</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="gridWrap">
+        <div id="grid" class="grid" aria-label="Multiplication grid"></div>
+      </div>
+    </section>
+
+    <aside class="card">
+      <div class="hd">
+        <div class="pill">המשימה הנוכחית</div>
+        <div class="pill">תא יעד: <b id="targetCell">-</b></div>
+      </div>
+      <div class="bd">
+        <div class="gameBox">
+          <div class="panel">
+            <div class="qTop">
+              <div class="qExpr" id="qExpr">?</div>
+            </div>
+            <div class="qStory" id="qStory" style="min-height:48px;">לחצי על תא בלוח כדי להתחיל באתגר הקסום ולגלות את
+              הסוד שלו!</div>
+
+            <div class="feedback" id="feedback">כבשי את כל הממלכה על ידי פתירת חידות חזותיות.</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="k">נקודות</div>
+              <div class="v" id="totalPoints">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">חיות</div>
+              <div class="v" id="animalsCount">0</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="qTop">
+              <div class="pill">אוסף חיות הפנטזיה</div>
+              <button class="btn tiny" id="openKingdomBtn" type="button">צפה בכל הממלכה</button>
+            </div>
+            <div class="collection" id="collection"></div>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="modalBack" id="modalBack" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Profiles">
+      <div class="mhd">
+        <div class="pill">פרופילים</div>
+        <div class="controls">
+          <button class="btn" id="closeModalBtn" type="button">סגור</button>
+        </div>
+      </div>
+      <div class="mbd">
+        <div class="note">
+          לכל פרופיל יש התקדמות ואוסף נפרדים. זה נשמר על המחשב הזה בלבד.
+        </div>
+
+        <div style="margin-top:12px;" class="profiles" id="profilesList"></div>
+
+        <div style="margin-top:14px;" class="panel">
+          <div class="pill">הוסף פרופיל חדש</div>
+          <div class="formRow">
+            <input class="textInput" id="newProfileName" placeholder="שם (למשל נועה)" maxlength="20" />
+            <select id="newProfileAvatar">
+              <option value="🦊">🦊 שועל</option>
+              <option value="🐺">🐺 זאב</option>
+              <option value="🦁">🦁 אריה</option>
+              <option value="🐯">🐯 טיגריס</option>
+              <option value="🐻">🐻 דוב</option>
+              <option value="🦉">🦉 ינשוף</option>
+              <option value="🐲">🐲 דרקון</option>
+              <option value="🦄">🦄 חד קרן</option>
+              <option value="🐬">🐬 דולפין</option>
+              <option value="🐴">🐴 סוס</option>
+            </select>
+            <button class="btn primary" id="createProfileBtn" type="button">צור</button>
+          </div>
+          <div class="note" style="margin-top:10px;">
+            טיפ: אפשר ליצור גם פרופיל לאחות, או מצב "אורח" בשביל חברים.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modalBack" id="challengeModal" aria-hidden="true">
+    <div class="modal" style="width: min(550px, 100%);" role="dialog" aria-modal="true">
+      <div class="mhd">
+        <div class="pill" id="questTitle">אתגר קסום</div>
+        <div class="pill" id="questExpr" style="background:var(--accent); color:var(--bg); margin-right:10px;">?</div>
+      </div>
+      <div class="mbd" style="text-align:center;">
+        <div id="questInstruction" class="note"
+          style="font-size:17px; margin-bottom:15px; font-weight:800; color:var(--text);">טוען אתגר...</div>
+        <div id="questContainer"
+          style="position:relative; width:100%; height:340px; margin:0 auto; background:rgba(0,0,0,.3); border-radius:24px; overflow:hidden; border:2px solid var(--accent); display:flex; align-items:center; justify-content:center;">
+          <!-- Content injected via JS -->
+        </div>
+
+        <div id="bonusSection"
+          style="margin-top:15px; background:rgba(255,255,255,0.05); padding:10px; border-radius:12px;">
+          <div class="tiny" style="margin-bottom:5px;">בונוס: כבר יודעת את התוצאה?</div>
+          <input type="number" id="bonusAnswerInput" class="textInput" placeholder="?"
+            style="width:80px; text-align:center; padding:10px;" />
+        </div>
+
+        <button class="btn primary" id="finishChallengeBtn" style="margin-top:20px; display:none;" type="button">המשך
+          הלאה!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modalBack" id="kingdomModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Kingdom">
+      <div class="mhd">
+        <div class="pill">הממלכה שלי: כל החיות שאספת</div>
+        <div class="controls">
+          <button class="btn" id="closeKingdomBtn" type="button">סגור</button>
+        </div>
+      </div>
+      <div class="mbd">
+        <div class="kingdomGrid" id="kingdomGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer
+    style="text-align:center; padding: 20px 0; color: rgba(255,255,255,0.3); font-weight: 900; letter-spacing: 2px; font-size: 14px;">
+    AN KONAMI APP
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = "mul_kingdom_v1";
+
+      const els = {
+        grid: document.getElementById("grid"),
+        qExpr: document.getElementById("qExpr"),
+        qStory: document.getElementById("qStory"),
+        targetCell: document.getElementById("targetCell"),
+        newRoundBtn: document.getElementById("newRoundBtn"),
+        resetProfileBtn: document.getElementById("resetProfileBtn"),
+        streak: document.getElementById("streak"),
+        progressPct: document.getElementById("progressPct"),
+        totalPoints: document.getElementById("totalPoints"),
+        maxN: document.getElementById("maxN"),
+        collection: document.getElementById("collection"),
+        animalsCount: document.getElementById("animalsCount"),
+        bonusAnswerInput: document.getElementById("bonusAnswerInput"),
+
+        activeProfileName: document.getElementById("activeProfileName"),
+        profilesBtn: document.getElementById("profilesBtn"),
+        modalBack: document.getElementById("modalBack"),
+        closeModalBtn: document.getElementById("closeModalBtn"),
+        profilesList: document.getElementById("profilesList"),
+        newProfileName: document.getElementById("newProfileName"),
+        newProfileAvatar: document.getElementById("newProfileAvatar"),
+        createProfileBtn: document.getElementById("createProfileBtn"),
+
+        toggleSoundBtn: document.getElementById("toggleSoundBtn"),
+        openKingdomBtn: document.getElementById("openKingdomBtn"),
+        kingdomModal: document.getElementById("kingdomModal"),
+        kingdomGrid: document.getElementById("kingdomGrid"),
+        closeKingdomBtn: document.getElementById("closeKingdomBtn"),
+
+        challengeModal: document.getElementById("challengeModal"),
+        questTitle: document.getElementById("questTitle"),
+        questExpr: document.getElementById("questExpr"),
+        questInstruction: document.getElementById("questInstruction"),
+        questContainer: document.getElementById("questContainer"),
+        finishChallengeBtn: document.getElementById("finishChallengeBtn"),
+      };
+
+      const animalPool = [
+        { emoji: "🦊", name: "שועל ערפל" },
+        { emoji: "🐺", name: "זאב ירח" },
+        { emoji: "🦁", name: "אריה זהב" },
+        { emoji: "🐯", name: "טיגריס ברק" },
+        { emoji: "🐻", name: "דוב יער" },
+        { emoji: "🦉", name: "ינשוף חכם" },
+        { emoji: "🐲", name: "דרקון קטן" },
+        { emoji: "🦄", name: "חד קרן נוצץ" },
+        { emoji: "🐬", name: "דולפין ים" },
+        { emoji: "🐴", name: "סוס רוח" },
+        { emoji: "🦒", name: "ג׳ירפה ענן" },
+        { emoji: "🐼", name: "פנדה במבוק" },
+        { emoji: "🦓", name: "זברה פס" },
+        { emoji: "🦝", name: "דביבון סקרן" },
+        { emoji: "🦔", name: "קיפוד לילה" },
+        { emoji: "🐰", name: "ארנב קפיץ" },
+        { emoji: "🦦", name: "לוטרה שובל" },
+        { emoji: "🐸", name: "צפרדע טל" },
+        { emoji: "🦜", name: "תוכי צבע" },
+        { emoji: "🦋", name: "פרפר קסם" },
+      ];
+
+      function getNextAnimalFor(key) {
+        const p = getActiveProfile();
+        if (!p) return animalPool[0];
+        const owned = new Set(p.animals.map(a => a.emoji));
+        let next = animalPool.find(a => !owned.has(a.emoji));
+        if (!next) next = pick(animalPool);
+        return { ...next, key };
+      }
+
+      const storyTemplates = [
+        "השער ליער נפתח רק אם תפתרי את הקסם הזה.",
+        "חיית פנטזיה מתחבאת כאן, צריך את התוצאה כדי להזמין אותה.",
+        "הדרקון הקטן מבקש סיסמה, רק כפל יפתח את הדלת.",
+        "הקוסמת של היער שומרת על תא הזה, בואי נעזור לה עם כפל.",
+        "רמז קטן: תוצאה נכונה, ותצטרפי עוד חיה לאוסף.",
+      ];
+
+      function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+      function now() { return Date.now(); }
+
+      let audioCtx = null;
+      function initAudio() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      function playSound(type) {
+        if (!state.soundEnabled) return;
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const nowTime = audioCtx.currentTime;
+
+        if (type === "success") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(523.25, nowTime);
+          osc.frequency.exponentialRampToValueAtTime(880, nowTime + 0.1);
+          gain.gain.setValueAtTime(0, nowTime);
+          gain.gain.linearRampToValueAtTime(0.2, nowTime + 0.05);
+          gain.gain.linearRampToValueAtTime(0, nowTime + 0.3);
+          osc.start();
+          osc.stop(nowTime + 0.3);
+        } else if (type === "error") {
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(150, nowTime);
+          osc.frequency.linearRampToValueAtTime(50, nowTime + 0.2);
+          gain.gain.setValueAtTime(0.2, nowTime);
+          gain.gain.linearRampToValueAtTime(0, nowTime + 0.2);
+          osc.start();
+          osc.stop(nowTime + 0.2);
+        }
+      }
+
+      const questGames = {
+        scratch: {
+          title: "גירוד הקסם",
+          instr: "גרדו את הענן כדי למצוא את החיה!",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transition:opacity 0.5s; z-index:2; pointer-events:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div>
+            <canvas style="position:absolute; inset:0; cursor:crosshair; width:100%; height:100%;"></canvas>`;
+            const canvas = container.querySelector("canvas");
+            const res = container.querySelector("#res");
+            const cw = container.clientWidth || 340;
+            const ch = container.clientHeight || 340;
+            canvas.width = cw;
+            canvas.height = ch;
+
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#2a3d7a";
+            ctx.fillRect(0, 0, cw, ch);
+            ctx.globalCompositeOperation = "destination-out";
+            let scratched = 0;
+            const move = (e) => {
+              const rect = canvas.getBoundingClientRect();
+              const touch = e.touches ? e.touches[0] : e;
+              ctx.beginPath();
+              ctx.arc(touch.clientX - rect.left, touch.clientY - rect.top, 35, 0, Math.PI * 2);
+              ctx.fill();
+              if (++scratched > 100) { res.style.opacity = 1; onWin(); }
+            };
+            const handleStart = (e) => {
+              if (e.type === "touchstart") e.preventDefault();
+              canvas.addEventListener(e.type === "touchstart" ? "touchmove" : "mousemove", move);
+            };
+            const handleEnd = () => {
+              canvas.removeEventListener("mousemove", move);
+              canvas.removeEventListener("touchmove", move);
+            };
+            canvas.addEventListener("mousedown", handleStart);
+            canvas.addEventListener("touchstart", handleStart);
+            window.addEventListener("mouseup", handleEnd);
+            window.addEventListener("touchend", handleEnd);
+          }
+        },
+        pop: {
+          title: "פיצוץ בועות",
+          instr: "פוצצו 10 בועות כדי לגלות את הסוד!",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            let count = 0;
+            const makeBubble = () => {
+              const b = document.createElement("div");
+              b.style.cssText = `position:absolute; width:60px; height:60px; background:rgba(255,255,255,0.2); border:2px solid #fff; border-radius:50%; cursor:pointer; left:${Math.random() * 80}%; top:${Math.random() * 80}%; transition:transform 0.1s; display:flex; align-items:center; justify-content:center; font-size:20px;`;
+              b.textContent = "🫧";
+              b.onclick = () => {
+                playSound("success");
+                b.remove();
+                if (++count >= 10) { res.style.display = "flex"; onWin(); }
+                else makeBubble();
+              };
+              container.appendChild(b);
+            };
+            makeBubble();
+          }
+        },
+        match: {
+          title: "מצאו את התואם",
+          instr: "לחצו על החיה שמופיעה פעמיים!",
+          run(container, onWin, animal) {
+            const icons = ["🦄", "🐉", "🧜‍♀️", "🧚", "✨", "🌟", "🏮", "🔮", "💎", "🌈", "🍀", "🍭"];
+            const target = animal.emoji;
+            const items = [target, target, ...icons.slice(0, 10)];
+            items.sort(() => Math.random() - 0.5);
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div><div id="grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:10px;"></div>`;
+            const g = container.querySelector("#grid");
+            const res = container.querySelector("#res");
+            items.forEach(icon => {
+              const b = document.createElement("div");
+              b.style.cssText = `font-size:40px; cursor:pointer; background:rgba(255,255,255,0.1); border-radius:15px; padding:15px; text-align:center; transition:background 0.3s;`;
+              b.textContent = icon;
+              b.onclick = () => {
+                if (icon === target) { playSound("success"); g.style.display = "none"; res.style.display = "flex"; onWin(); }
+                else { b.style.background = "rgba(255,0,0,0.2)"; playSound("error"); }
+              };
+              g.appendChild(b);
+            });
+          }
+        },
+        chase: {
+          title: "תפסי את הכוכב",
+          instr: "לחצי על הכוכב הקופץ 6 פעמים!",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            let count = 0;
+            const star = document.createElement("div");
+            star.style.cssText = `position:absolute; font-size:40px; cursor:pointer; transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); width:60px; height:60px; display:flex; align-items:center; justify-content:center; left:40%; top:40%;`;
+            star.textContent = "⭐";
+            const move = () => {
+              star.style.left = (Math.random() * 80 + 5) + "%";
+              star.style.top = (Math.random() * 80 + 5) + "%";
+            };
+            star.onclick = () => {
+              playSound("success");
+              count++;
+              if (count >= 6) {
+                star.remove();
+                res.style.display = "flex";
+                onWin();
+              } else {
+                move();
+              }
+            };
+            container.appendChild(star);
+          }
+        },
+        order: {
+          title: "סדר הכוכבים",
+          instr: "לחצי על המספרים לפי הסדר: 1 עד 6",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            let next = 1;
+            [1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5).forEach((num, i) => {
+              const b = document.createElement("div");
+              b.style.cssText = `position:absolute; width:50px; height:50px; background:var(--accent); color:var(--bg); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:20px; cursor:pointer; left:${(i % 3) * 30 + 15}%; top:${Math.floor(i / 3) * 40 + 20}%;`;
+              b.textContent = num;
+              b.onclick = () => {
+                if (num === next) {
+                  playSound("success");
+                  b.style.opacity = "0.3";
+                  b.style.pointerEvents = "none";
+                  next++;
+                  if (next > 6) { res.style.display = "flex"; onWin(); }
+                } else {
+                  playSound("error");
+                }
+              };
+              container.appendChild(b);
+            });
+          }
+        },
+        glow: {
+          title: "אורות הקסם",
+          instr: "הדליקי את כל 8 הכוכבים!",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            let on = 0;
+            for (let i = 0; i < 8; i++) {
+              const s = document.createElement("div");
+              s.style.cssText = `position:absolute; font-size:30px; cursor:pointer; opacity:0.2; left:${(i % 4) * 20 + 15}%; top:${Math.floor(i / 4) * 40 + 30}%; transition:all 0.3s;`;
+              s.textContent = "🌟";
+              s.onclick = () => {
+                if (s.style.opacity === "1") return;
+                playSound("success");
+                s.style.opacity = "1";
+                s.style.transform = "scale(1.3)";
+                on++;
+                if (on === 8) { res.style.display = "flex"; onWin(); }
+              };
+              container.appendChild(s);
+            }
+          }
+        },
+        path: {
+          title: "המסלול הקסום",
+          instr: "העבירי את האצבע מהרכבת לדגל, וחזרה!",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none; pointer-events:none; z-index:2;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+            </div><canvas style="position:absolute; inset:0; cursor:crosshair; width:100%; height:100%;"></canvas>`;
+            const canvas = container.querySelector("canvas");
+            const res = container.querySelector("#res");
+            const cw = container.clientWidth || 340;
+            const ch = container.clientHeight || 340;
+            canvas.width = cw;
+            canvas.height = ch;
+
+            const ctx = canvas.getContext("2d");
+            const midY = ch / 2;
+            ctx.strokeStyle = "rgba(255,255,255,0.1)";
+            ctx.lineWidth = 44;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(60, midY);
+            ctx.lineTo(cw - 60, midY);
+            ctx.stroke();
+            ctx.fillStyle = "var(--accent)";
+            ctx.font = "34px Arial";
+            ctx.fillText("🚀", 25, midY + 12);
+            ctx.fillText("🏁", cw - 55, midY + 12);
+
+            let started = false;
+            let reachedEnd = false;
+            let won = false;
+            const move = (e) => {
+              if (won) return;
+              const rect = canvas.getBoundingClientRect();
+              const touch = e.touches ? e.touches[0] : e;
+              const x = touch.clientX - rect.left;
+              if (x < 80) started = true;
+              if (started && x > (cw - 80)) reachedEnd = true;
+              if (reachedEnd && x < 80) {
+                won = true;
+                playSound("success");
+                res.style.display = "flex";
+                onWin();
+              }
+            };
+            const handleStart = (e) => {
+              if (e.type === "touchstart") e.preventDefault();
+              canvas.addEventListener(e.type === "touchstart" ? "touchmove" : "mousemove", move);
+              move(e);
+            };
+            const handleEnd = () => {
+              canvas.removeEventListener("mousemove", move);
+              canvas.removeEventListener("touchmove", move);
+            };
+            canvas.addEventListener("mousedown", handleStart);
+            canvas.addEventListener("touchstart", handleStart);
+            window.addEventListener("mouseup", handleEnd);
+            window.addEventListener("touchend", handleEnd);
+          }
+        }
+      };
+
+      function startQuest(a, b) {
+        const key = cellKey(a, b);
+        const animal = getNextAnimalFor(key);
+        const types = Object.keys(questGames);
+        const game = questGames[pick(types)];
+
+        els.questTitle.textContent = game.title;
+        els.questExpr.textContent = `${a} × ${b}`;
+        els.questInstruction.textContent = game.instr;
+        els.questContainer.innerHTML = "";
+        els.bonusAnswerInput.value = "";
+        els.finishChallengeBtn.style.display = "none";
+        els.challengeModal.style.display = "flex";
+
+        game.run(els.questContainer, () => {
+          els.finishChallengeBtn.style.display = "inline-block";
+          triggerConfetti();
+        }, animal);
+
+        els.finishChallengeBtn.onclick = () => {
+          const typed = Number(els.bonusAnswerInput.value.trim());
+          const isCorrect = !Number.isNaN(typed) && typed === (a * b);
+
+          els.challengeModal.style.display = "none";
+          markDone(a, b, animal, isCorrect);
+          save();
+        };
+      }
+
+      function triggerConfetti() {
+        if (typeof confetti === "function") {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ["#2bd576", "#ffd166", "#e8ecff"]
+          });
+        }
+      }
+
+      const state = {
+        activeProfileId: null,
+        profiles: {},
+
+        mode: "quest",
+        maxN: 10,
+        soundEnabled: true,
+
+        current: null
+      };
+
+      function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+      function defaultProfile(name, avatar) {
+        return {
+          id: "p_" + Math.random().toString(16).slice(2) + "_" + now(),
+          name: (name || "אורחת").trim().slice(0, 20),
+          avatar: avatar || "🦊",
+          createdAt: now(),
+          settings: {
+            maxN: 10,
+          },
+          stats: {
+            correct: 0,
+            wrong: 0,
+            streak: 0,
+            points: 0,
+          },
+          done: {},
+          animals: []
+        };
+      }
+
+      function getActiveProfile() {
+        if (!state.activeProfileId) return null;
+        return state.profiles[state.activeProfileId] || null;
+      }
+
+      function save() {
+        const toSave = {
+          activeProfileId: state.activeProfileId,
+          profiles: state.profiles,
+          soundEnabled: state.soundEnabled,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      }
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const saved = JSON.parse(raw);
+          if (saved && typeof saved === "object") {
+            state.activeProfileId = saved.activeProfileId || null;
+            state.profiles = saved.profiles && typeof saved.profiles === "object" ? saved.profiles : {};
+            if (typeof saved.soundEnabled === "boolean") {
+              state.soundEnabled = saved.soundEnabled;
+            }
+          }
+        } catch (e) { }
+      }
+
+      function ensureAtLeastOneProfile() {
+        if (Object.keys(state.profiles).length > 0) return;
+
+        const p = defaultProfile("אורחת", "🦊");
+        state.profiles[p.id] = p;
+        state.activeProfileId = p.id;
+        save();
+      }
+
+      function applyProfileSettingsToGlobal() {
+        const p = getActiveProfile();
+        if (!p) return;
+        state.maxN = clamp(Number(p.settings.maxN || 10), 2, 12);
+        els.maxN.value = String(state.maxN);
+      }
+
+      function updateProfileSettingsFromGlobal() {
+        const p = getActiveProfile();
+        if (!p) return;
+        p.settings.maxN = state.maxN;
+        save();
+      }
+
+      function cellKey(a, b) { return a + "," + b; }
+
+      function totalCells() {
+        return state.maxN * state.maxN;
+      }
+
+      function doneCellsCount() {
+        const p = getActiveProfile();
+        if (!p) return 0;
+        return Object.keys(p.done).length;
+      }
+
+      function progressPercent() {
+        const pct = (doneCellsCount() / totalCells()) * 100;
+        return Math.round(pct);
+      }
+
+      function buildGrid() {
+        const p = getActiveProfile();
+        const n = state.maxN;
+        els.grid.style.gridTemplateColumns = `64px repeat(${n}, 1fr)`;
+        els.grid.innerHTML = "";
+
+        const make = (text, cls) => {
+          const d = document.createElement("div");
+          d.className = "cell " + (cls || "");
+          d.textContent = text;
+          return d;
+        };
+
+        els.grid.appendChild(make("×", "corner"));
+        for (let j = 1; j <= n; j++) {
+          els.grid.appendChild(make(String(j), "head"));
+        }
+
+        for (let i = 1; i <= n; i++) {
+          els.grid.appendChild(make(String(i), "head"));
+          for (let j = 1; j <= n; j++) {
+            const key = cellKey(i, j);
+            const d = make("", "work");
+            d.dataset.a = String(i);
+            d.dataset.b = String(j);
+            d.dataset.key = key;
+
+            const isDone = p ? !!p.done[key] : false;
+            if (isDone) d.classList.add("done");
+
+            const val = i * j;
+
+            if (isDone) {
+              d.innerHTML = `<div class="mini">${val}</div><div class="submini">${i}×${j}</div>`;
+            } else {
+              d.innerHTML = ``;
+              d.onclick = () => {
+                if (isDone) return;
+                startQuest(i, j);
+              };
+            }
+
+            d.title = `${i}×${j}`;
+            d.addEventListener("click", () => {
+              setCurrent(i, j, true);
+            });
+
+            els.grid.appendChild(d);
+          }
+        }
+
+        highlightCurrentCell();
+      }
+
+      function highlightCurrentCell() {
+        const cells = els.grid.querySelectorAll(".cell.work");
+        cells.forEach(c => c.classList.remove("hi"));
+        if (!state.current) return;
+        const sel = els.grid.querySelector(`.cell.work[data-key="${state.current.key}"]`);
+        if (sel) sel.classList.add("hi");
+      }
+
+      function pickNextCell() {
+        const p = getActiveProfile();
+        if (!p) return null;
+
+        const n = state.maxN;
+        const candidates = [];
+        for (let a = 1; a <= n; a++) {
+          for (let b = 1; b <= n; b++) {
+            const key = cellKey(a, b);
+            if (p.done[key]) continue;
+            candidates.push({ a, b, key });
+          }
+        }
+
+        if (candidates.length === 0) return null;
+
+        const idx = Math.floor(Math.random() * candidates.length);
+        return candidates[idx];
+      }
+
+      function setFeedback(text, type) {
+        els.feedback.classList.remove("good", "bad");
+        if (type === "good") els.feedback.classList.add("good");
+        if (type === "bad") els.feedback.classList.add("bad");
+        els.feedback.textContent = text;
+      }
+
+      function simpleHint(a, b, guess) {
+        const ans = a * b;
+        const max = Math.max(a, b);
+
+        if (max === 10) return "רמז: כפל ב-10 זה להוסיף 0.";
+        if (max === 5) return "רמז: כפל ב-5 תמיד נגמר ב-0 או 5.";
+        if (max === 9) return "רמז: כפל ב-9, אפשר לחשוב 10×X ואז להוריד X.";
+        if (max === 8) return "רמז: כפל ב-8, אפשר לעשות כפול 2 שלוש פעמים.";
+        if (max === 4) return "רמז: כפל ב-4, אפשר כפול 2 פעמיים.";
+        if (max === 2) return "רמז: כפל ב-2 זה להוסיף את המספר לעצמו.";
+
+        if (typeof guess === "number" && !Number.isNaN(guess)) {
+          if (guess < ans) return "רמז: יצא לך נמוך מדי.";
+          if (guess > ans) return "רמז: יצא לך גבוה מדי.";
+        }
+        return "רמז: אפשר לפרק לכפל שאת כבר יודעת, למשל X×6 זה X×5 ועוד X.";
+      }
+
+      function setStory() {
+        const p = getActiveProfile();
+        if (!p || !state.current) return;
+        const { a, b } = state.current;
+        const base = pick(storyTemplates);
+        const extra = `(${a}×${b})`;
+        els.qStory.textContent = base + " " + extra;
+      }
+
+      function awardAnimalForCell(animal) {
+        const p = getActiveProfile();
+        if (!p) return;
+        p.animals.push(animal);
+      }
+
+      function renderCollection() {
+        const p = getActiveProfile();
+        els.collection.innerHTML = "";
+        if (!p) return;
+
+        const list = p.animals.slice(-8).reverse();
+        if (list.length === 0) {
+          const d = document.createElement("div");
+          d.className = "note";
+          d.textContent = "עדיין אין חיות. כשתכבשי תא ראשון, תקבלי חיה 🙂";
+          els.collection.appendChild(d);
+          return;
+        }
+
+        for (const a of list) {
+          const b = document.createElement("div");
+          b.className = "badge";
+          b.innerHTML = `<div style="font-size:18px;">${a.emoji}</div><div>${a.name}</div>`;
+          els.collection.appendChild(b);
+        }
+      }
+
+      function updateUI() {
+        const p = getActiveProfile();
+
+        els.activeProfileName.textContent = p ? (p.avatar + " " + p.name) : "-";
+        els.progressPct.textContent = progressPercent() + "%";
+        els.streak.textContent = p ? String(p.stats.streak) : "0";
+        els.totalPoints.textContent = p ? String(p.stats.points || 0) : "0";
+        els.animalsCount.textContent = p ? String(p.animals.length) : "0";
+
+        els.maxN.value = String(state.maxN);
+        els.toggleSoundBtn.textContent = state.soundEnabled ? "🔊" : "🔇";
+
+        renderCollection();
+      }
+
+      function setCurrent(a, b, manual) {
+        const key = cellKey(a, b);
+        const ans = a * b;
+        state.current = { a, b, ans, key };
+
+        els.qExpr.textContent = `${a} × ${b} = ?`;
+        els.targetCell.textContent = key;
+
+        setStory();
+        setFeedback(manual ? "בחרת תא ידנית. עברי את האתגר כדי לכבוש אותו." : "עברי את האתגר כדי לכבוש את התא ולהרוויח חיה.", "neutral");
+
+        highlightCurrentCell();
+      }
+
+
+      function newRound() {
+        const p = getActiveProfile();
+        if (!p) {
+          setFeedback("בחרי פרופיל כדי להתחיל.", "neutral");
+          return;
+        }
+
+        const next = pickNextCell();
+        if (!next) {
+          state.current = null;
+          els.qExpr.textContent = "כל הכבוד, השלמת את כל הלוח 🎉";
+          els.targetCell.textContent = "-";
+          els.qStory.textContent = "אפשר לשנות ל-12 ולהמשיך, או לאפס את הפרופיל למסע חדש.";
+          setFeedback("סיימת את כולם. אלופה!", "good");
+          highlightCurrentCell();
+          updateUI();
+          save();
+          return;
+        }
+
+        setCurrent(next.a, next.b, false);
+        updateUI();
+        save();
+      }
+
+      function markDone(a, b, animal, bonus = false) {
+        const p = getActiveProfile();
+        if (!p) return;
+
+        const key = cellKey(a, b);
+        if (p.done[key]) return;
+
+        p.done[key] = true;
+        awardAnimalForCell(animal);
+        p.stats.correct += 1;
+        p.stats.streak += 1;
+
+        if (!p.stats.points) p.stats.points = 0;
+        p.stats.points += (bonus ? 3 : 1);
+
+        buildGrid();
+        updateUI();
+        setFeedback(`כל הכבוד! ${bonus ? "בונוס! " : ""}גילית שמשוואה היא: ${a} × ${b} = ${a * b}`, "good");
+      }
+
+      function submit() {
+        // Disabled since we use quests now
+        return;
+      }
+
+      function skip() {
+        newRound();
+      }
+
+
+      function setMaxN() {
+        const p = getActiveProfile();
+        const v = clamp(Number(els.maxN.value), 2, 12);
+        state.maxN = v;
+
+        if (p) {
+          const newDone = {};
+          const newAnimals = [];
+
+          for (const key of Object.keys(p.done)) {
+            const [a, b] = key.split(",").map(Number);
+            if (a <= v && b <= v) newDone[key] = true;
+          }
+
+          const allowedKeys = new Set(Object.keys(newDone));
+          for (const an of p.animals) {
+            if (allowedKeys.has(an.key)) newAnimals.push(an);
+          }
+
+          p.done = newDone;
+          p.animals = newAnimals;
+        }
+
+        updateProfileSettingsFromGlobal();
+        buildGrid();
+        updateUI();
+        newRound();
+      }
+
+
+
+      function resetActiveProfile() {
+        const p = getActiveProfile();
+        if (!p) return;
+        const ok = confirm("לאפס את ההתקדמות של הפרופיל הזה? זה ימחק כיבוש וחיות.");
+        if (!ok) return;
+
+        p.done = {};
+        p.animals = [];
+        p.stats = { correct: 0, wrong: 0, streak: 0, points: 0 };
+
+        save();
+        buildGrid();
+        updateUI();
+        setFeedback("הפרופיל התאפס. מתחילים מסע חדש 🙂", "neutral");
+        newRound();
+      }
+
+      function openProfilesModal() {
+        els.modalBack.style.display = "flex";
+        els.modalBack.setAttribute("aria-hidden", "false");
+        renderProfilesModal();
+      }
+
+      function closeProfilesModal() {
+        els.modalBack.style.display = "none";
+        els.modalBack.setAttribute("aria-hidden", "true");
+      }
+
+      function renderProfilesModal() {
+        els.profilesList.innerHTML = "";
+
+        const ids = Object.keys(state.profiles).sort((a, b) => {
+          return (state.profiles[b].createdAt || 0) - (state.profiles[a].createdAt || 0);
+        });
+
+        for (const id of ids) {
+          const p = state.profiles[id];
+          const doneCount = Object.keys(p.done || {}).length;
+          const denom = ((p.settings?.maxN || 10) ** 2);
+          const pct = denom ? Math.round((doneCount / denom) * 100) : 0;
+
+          const card = document.createElement("div");
+          card.className = "profileCard";
+          card.innerHTML = `
+            <div class="pLeft">
+              <div class="avatar">${p.avatar || "🦊"}</div>
+              <div>
+                <div class="pName">${escapeHtml(p.name || "פרופיל")}</div>
+                <div class="pMeta">כיבוש ${pct}% , נקודות ${p.stats?.points || 0}, חיות ${p.animals?.length || 0}</div>
+              </div>
+            </div>
+            <div class="pActions">
+              <button class="btn" data-action="select" data-id="${id}" type="button">בחר</button>
+              <button class="btn danger" data-action="delete" data-id="${id}" type="button">מחק</button>
+            </div>
+          `;
+          els.profilesList.appendChild(card);
+        }
+
+        els.profilesList.querySelectorAll("button[data-action]").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const action = e.currentTarget.dataset.action;
+            const id = e.currentTarget.dataset.id;
+
+            if (action === "select") {
+              state.activeProfileId = id;
+              applyProfileSettingsToGlobal();
+              save();
+              closeProfilesModal();
+              buildGrid();
+              updateUI();
+              setFeedback("ברוכה הבאה להרפתקה, " + (getActiveProfile()?.name || ""), "neutral");
+              newRound();
+            }
+
+            if (action === "delete") {
+              const p = state.profiles[id];
+              if (!p) return;
+              const ok = confirm("למחוק את הפרופיל '" + p.name + "'? זה יימחק לגמרי.");
+              if (!ok) return;
+
+              delete state.profiles[id];
+              if (state.activeProfileId === id) {
+                state.activeProfileId = Object.keys(state.profiles)[0] || null;
+              }
+              ensureAtLeastOneProfile();
+              applyProfileSettingsToGlobal();
+              save();
+              renderProfilesModal();
+              buildGrid();
+              updateUI();
+              newRound();
+            }
+          });
+        });
+      }
+
+      function createProfile() {
+        const name = (els.newProfileName.value || "").trim();
+        const avatar = els.newProfileAvatar.value || "🦊";
+
+        if (!name) {
+          alert("נא לכתוב שם לפרופיל.");
+          return;
+        }
+
+        const p = defaultProfile(name, avatar);
+        state.profiles[p.id] = p;
+        state.activeProfileId = p.id;
+
+        els.newProfileName.value = "";
+        save();
+
+        applyProfileSettingsToGlobal();
+        renderProfilesModal();
+        closeProfilesModal();
+
+        buildGrid();
+        updateUI();
+        setFeedback("פרופיל חדש נוצר. מתחילים מסע!", "neutral");
+        newRound();
+      }
+
+      function escapeHtml(s) {
+        return String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+      }
+
+      function toggleSound() {
+        state.soundEnabled = !state.soundEnabled;
+        updateUI();
+        save();
+      }
+
+      function openKingdomModal() {
+        initAudio(); // Unlock audio on user interaction
+        els.kingdomModal.style.display = "flex";
+        els.kingdomModal.setAttribute("aria-hidden", "false");
+        renderKingdomModal();
+      }
+
+      function closeKingdomModal() {
+        els.kingdomModal.style.display = "none";
+        els.kingdomModal.setAttribute("aria-hidden", "true");
+      }
+
+      function renderKingdomModal() {
+        const p = getActiveProfile();
+        els.kingdomGrid.innerHTML = "";
+        if (!p) return;
+
+        if (p.animals.length === 0) {
+          els.kingdomGrid.innerHTML = "<div class='note'>עדיין אין לך חיות בממלכה. כבשי תאים כדי לאסוף אותן!</div>";
+          return;
+        }
+
+        for (const a of p.animals) {
+          const d = document.createElement("div");
+          d.className = "kCell";
+          d.innerHTML = `
+            <div class="kEmoji">${a.emoji}</div>
+            <div class="kName">${a.name}</div>
+            <div class="kFact">${a.key.replace(",", " × ")}</div>
+          `;
+          els.kingdomGrid.appendChild(d);
+        }
+      }
+
+      function wire() {
+        els.newRoundBtn.addEventListener("click", newRound);
+        els.resetProfileBtn.addEventListener("click", resetActiveProfile);
+
+        els.maxN.addEventListener("change", setMaxN);
+
+        els.profilesBtn.addEventListener("click", openProfilesModal);
+        els.closeModalBtn.addEventListener("click", closeProfilesModal);
+        els.modalBack.addEventListener("click", (e) => {
+          if (e.target === els.modalBack) closeProfilesModal();
+        });
+
+        els.toggleSoundBtn.addEventListener("click", toggleSound);
+        els.openKingdomBtn.addEventListener("click", openKingdomModal);
+        els.closeKingdomBtn.addEventListener("click", closeKingdomModal);
+        els.kingdomModal.addEventListener("click", (e) => {
+          if (e.target === els.kingdomModal) closeKingdomModal();
+        });
+
+        els.createProfileBtn.addEventListener("click", createProfile);
+        els.newProfileName.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") createProfile();
+        });
+      }
+
+      function init() {
+        load();
+        ensureAtLeastOneProfile();
+
+        if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
+          state.activeProfileId = Object.keys(state.profiles)[0] || null;
+        }
+
+        applyProfileSettingsToGlobal();
+        wire();
+        buildGrid();
+        updateUI();
+
+        openProfilesModal();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+
+</html>
