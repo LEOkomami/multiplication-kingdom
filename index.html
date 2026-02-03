@@ -3,8 +3,13 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ממלכת הכפל, הרפתקה עם חיות</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0b1020">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="manifest" href="manifest.json">
+  <title>ממלכת הכפל - הרפתקת חיות</title>
   <style>
     :root {
       --bg: #0b1020;
@@ -229,13 +234,15 @@
     }
 
     .cell.head {
-      background: rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .12);
       font-weight: 900;
+      font-size: 18px;
     }
 
     .cell.corner {
-      background: rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .12);
       font-weight: 900;
+      font-size: 20px;
     }
 
     .cell.work {
@@ -655,10 +662,40 @@
       font-size: 12px;
       line-height: 1.5;
     }
+
+    #mobileBlock {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        overflow: hidden;
+      }
+
+      #mobileBlock {
+        display: flex;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div id="mobileBlock">
+    <div style="font-size: 60px; margin-bottom: 20px;">📱</div>
+    <h2 style="margin-bottom: 10px;">ממלכת הכפל</h2>
+    <p style="font-size: 18px; font-weight: 700; color: var(--muted);">המשחק מותאם למחשבים ולטאבלטים בלבד.</p>
+    <p style="font-size: 14px; color: var(--muted); margin-top: 10px;">נא לפתוח את האתר ממכשיר עם מסך גדול יותר כדי
+      לשחק.</p>
+  </div>
   <header>
     <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
       <div>
@@ -1806,6 +1843,13 @@
       }
 
       init();
+
+      // PWA Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Error:', err));
+        });
+      }
     })();
   </script>
 </body>
