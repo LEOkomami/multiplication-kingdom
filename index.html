@@ -380,28 +380,43 @@
     }
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
     .stat {
-      padding: 12px;
-      border-radius: 14px;
       background: rgba(255, 255, 255, .05);
       border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .stat .k {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
     }
 
     .stat .v {
-      margin-top: 4px;
-      font-size: 18px;
+      font-size: 52px;
       font-weight: 1000;
+      color: var(--accent);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(255, 209, 102, 0.3);
+    }
+
+    .stat .v i {
+      font-style: normal;
+      margin-inline-end: 10px;
     }
 
     .collection {
@@ -775,11 +790,11 @@
 
           <div class="stats">
             <div class="stat">
-              <div class="k">נקודות</div>
+              <div class="k">🏆 נקודות צבורות</div>
               <div class="v" id="totalPoints">0</div>
             </div>
             <div class="stat">
-              <div class="k">חיות</div>
+              <div class="k">🦁 חיות באוסף</div>
               <div class="v" id="animalsCount">0</div>
             </div>
           </div>
@@ -855,12 +870,18 @@
         </div>
 
         <div id="bonusSection"
-          style="margin-top:20px; background:rgba(255,209,102,0.1); padding:20px; border-radius:18px; border:2px dashed rgba(255,209,102,0.4);">
-          <div style="margin-bottom:10px; font-weight:1000; font-size:20px; color:var(--accent);">בונוס: כבר יודעת את
-            התוצאה?</div>
-          <input type="number" id="bonusAnswerInput" class="textInput" placeholder="?"
-            style="width:120px; height:60px; text-align:center; font-size:32px; border-color:var(--accent); background:rgba(0,0,0,0.3);" />
-          <div class="note" style="margin-top:10px; font-weight:800;">הקלידי את התשובה כאן לבונוס של 3 נקודות!</div>
+          style="margin-top:25px; background:rgba(255,209,102,0.15); padding:30px; border-radius:30px; border:4px dashed var(--accent); position:relative; overflow:hidden;">
+          <div
+            style="margin-bottom:15px; font-weight:1000; font-size:28px; color:var(--accent); text-shadow: 0 0 15px rgba(255,209,102,0.5);">
+            💎 בונוס: כבר יודעת את התוצאה?</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:20px;">
+            <input type="number" id="bonusAnswerInput" class="textInput" placeholder="?"
+              style="width:160px; height:90px; text-align:center; font-size:48px; border-width:3px; border-color:var(--accent); background:rgba(0,0,0,0.5); border-radius:20px;" />
+            <div style="text-align:right;">
+              <div style="font-size:22px; font-weight:1000; color:var(--good);">+3 נקודות בונוס!</div>
+              <div class="note" style="font-size:16px; font-weight:800; opacity:0.8;">הקלידי וזכי מיידית</div>
+            </div>
+          </div>
         </div>
 
         <button class="btn primary" id="finishChallengeBtn" style="margin-top:20px; display:none;" type="button">המשך
