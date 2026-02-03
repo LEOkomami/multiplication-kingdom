@@ -1,12 +1,12 @@
-const CACHE_NAME = 'multi-kingdom-v1';
+const CACHE_NAME = 'multi-kingdom-v2';
 const ASSETS = [
     './',
     './index.html',
     './manifest.json',
     './icon-512.png'
 ];
-
 self.addEventListener('install', (e) => {
+    self.skipWaiting();
     e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
