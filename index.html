@@ -752,9 +752,6 @@
           <span class="pill">כיבוש: <b id="progressPct">0%</b></span>
           <span class="pill">רצף נכון: <b id="streak">0</b></span>
         </div>
-        <div class="controls">
-          <button class="btn primary" id="newRoundBtn" type="button">סבב חדש</button>
-        </div>
       </div>
 
       <div class="hd">
@@ -773,21 +770,8 @@
     </section>
 
     <aside class="card">
-      <div class="hd">
-        <div class="pill">המשימה הנוכחית</div>
-        <div class="pill">תא יעד: <b id="targetCell">-</b></div>
-      </div>
       <div class="bd">
         <div class="gameBox">
-          <div class="panel">
-            <div class="qTop">
-              <div class="qExpr" id="qExpr">?</div>
-            </div>
-            <div class="qStory" id="qStory" style="min-height:48px;">לחצי על תא בלוח כדי להתחיל באתגר הקסום ולגלות את
-              הסוד שלו!</div>
-
-            <div class="feedback" id="feedback">כבשי את כל הממלכה על ידי פתירת חידות חזותיות.</div>
-          </div>
 
           <div class="stats">
             <div class="stat">
@@ -822,7 +806,7 @@
         </div>
       </div>
       <div class="mbd">
-        <div class="note">
+        <div class="note" style="font-size: 18px; line-height: 1.5; font-weight: 700; color: var(--text);">
           לכל פרופיל יש התקדמות ואוסף נפרדים. זה נשמר על המחשב הזה בלבד.
         </div>
 
@@ -831,7 +815,7 @@
         <div style="margin-top:14px;" class="panel">
           <div class="pill">הוסף פרופיל חדש</div>
           <div class="formRow">
-            <input class="textInput" id="newProfileName" placeholder="שם (למשל נועה)" maxlength="20" />
+            <input class="textInput" id="newProfileName" placeholder="שם (למשל ריף)" maxlength="20" />
             <select id="newProfileAvatar">
               <option value="🦊">🦊 שועל</option>
               <option value="🐺">🐺 זאב</option>
@@ -871,10 +855,12 @@
         </div>
 
         <div id="bonusSection"
-          style="margin-top:15px; background:rgba(255,255,255,0.05); padding:10px; border-radius:12px;">
-          <div class="tiny" style="margin-bottom:5px;">בונוס: כבר יודעת את התוצאה?</div>
+          style="margin-top:20px; background:rgba(255,209,102,0.1); padding:20px; border-radius:18px; border:2px dashed rgba(255,209,102,0.4);">
+          <div style="margin-bottom:10px; font-weight:1000; font-size:20px; color:var(--accent);">בונוס: כבר יודעת את
+            התוצאה?</div>
           <input type="number" id="bonusAnswerInput" class="textInput" placeholder="?"
-            style="width:80px; text-align:center; padding:10px;" />
+            style="width:120px; height:60px; text-align:center; font-size:32px; border-color:var(--accent); background:rgba(0,0,0,0.3);" />
+          <div class="note" style="margin-top:10px; font-weight:800;">הקלידי את התשובה כאן לבונוס של 3 נקודות!</div>
         </div>
 
         <button class="btn primary" id="finishChallengeBtn" style="margin-top:20px; display:none;" type="button">המשך
@@ -931,10 +917,10 @@
 
       const els = {
         grid: document.getElementById("grid"),
-        qExpr: document.getElementById("qExpr"),
-        qStory: document.getElementById("qStory"),
-        targetCell: document.getElementById("targetCell"),
-        newRoundBtn: document.getElementById("newRoundBtn"),
+        qExpr: document.getElementById("qExpr") || {},
+        qStory: document.getElementById("qStory") || {},
+        targetCell: document.getElementById("targetCell") || {},
+        newRoundBtn: document.getElementById("newRoundBtn") || {},
         resetProfileBtn: document.getElementById("resetProfileBtn"),
         streak: document.getElementById("streak"),
         progressPct: document.getElementById("progressPct"),
@@ -975,6 +961,7 @@
         successOverlayExpr: document.getElementById("successOverlayExpr"),
         successOverlayPoints: document.getElementById("successOverlayPoints"),
       };
+      els.feedback = document.getElementById("feedback") || {};
 
       const animalPool = [
         { emoji: "🦊", name: "שועל ערפל" },
@@ -1386,7 +1373,7 @@
       function ensureAtLeastOneProfile() {
         if (Object.keys(state.profiles).length > 0) return;
 
-        const p = defaultProfile("אורחת", "🦊");
+        const p = defaultProfile("אורח/ת", "🦊");
         state.profiles[p.id] = p;
         state.activeProfileId = p.id;
         save();
