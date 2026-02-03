@@ -685,6 +685,39 @@
         display: flex;
       }
     }
+
+    #successOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 16, 32, 0.9);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .successTitle {
+      font-size: 60px;
+      margin-bottom: 20px;
+      animation: modalSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .successExpr {
+      font-size: 48px;
+      font-weight: 1000;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .successPoints {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--good);
+    }
   </style>
 </head>
 
@@ -699,12 +732,13 @@
   <header>
     <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
       <div>
-        <h1>ממלכת הכפל, הרפתקה עם חיות</h1>
-        <div class="sub">כובשים תאים בלוח הכפל, אוספים חיות פנטזיה, ושומרים התקדמות לכל פרופיל בנפרד.</div>
+        <h1>ממלכת הכפל - הרפתקת חיות</h1>
+        <div class="sub">ברוכים הבאים לממלכה! כבשו תאים, אספו חיות נדירות ושברו שיאים.</div>
       </div>
       <div class="controls">
         <span class="pill">שחקנית: <b id="activeProfileName">-</b></span>
         <button class="btn icon" id="toggleSoundBtn" title="צלילים" type="button">🔊</button>
+        <button class="btn" id="leaderboardBtn" type="button">טבלת האלופים</button>
         <button class="btn" id="profilesBtn" type="button">פרופילים</button>
         <button class="btn danger" id="resetProfileBtn" type="button">איפוס פרופיל</button>
       </div>
@@ -824,9 +858,11 @@
     <div class="modal" style="width: min(550px, 100%);" role="dialog" aria-modal="true">
       <div class="mhd">
         <div class="pill" id="questTitle">אתגר קסום</div>
-        <div class="pill" id="questExpr" style="background:var(--accent); color:var(--bg); margin-right:10px;">?</div>
       </div>
       <div class="mbd" style="text-align:center;">
+        <div id="questExpr"
+          style="font-size:80px; font-weight:1000; color:var(--accent); margin-bottom:10px; text-shadow: 0 0 20px rgba(255,209,102,0.4);">
+          ?</div>
         <div id="questInstruction" class="note"
           style="font-size:17px; margin-bottom:15px; font-weight:800; color:var(--text);">טוען אתגר...</div>
         <div id="questContainer"
@@ -861,9 +897,30 @@
     </div>
   </div>
 
+  <div class="modalBack" id="leaderboardModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Leaderboard">
+      <div class="mhd">
+        <div class="pill">טבלת האלופים 🏆</div>
+        <div class="controls">
+          <button class="btn" id="closeLeaderboardBtn" type="button">סגור</button>
+        </div>
+      </div>
+      <div class="mbd">
+        <div class="note">כל השחקניות בממלכה וההישגים שלהן:</div>
+        <div id="leaderboardList" style="margin-top:15px; display:grid; gap:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="successOverlay">
+    <div class="successTitle">⭐ מעולה! ⭐</div>
+    <div class="successExpr" id="successOverlayExpr">2 × 2 = 4</div>
+    <div class="successPoints" id="successOverlayPoints">+1 נקודות</div>
+  </div>
+
   <footer
     style="text-align:center; padding: 20px 0; color: rgba(255,255,255,0.3); font-weight: 900; letter-spacing: 2px; font-size: 14px;">
-    AN KONAMI APP
+    A KONAMI APP
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -908,6 +965,15 @@
         questInstruction: document.getElementById("questInstruction"),
         questContainer: document.getElementById("questContainer"),
         finishChallengeBtn: document.getElementById("finishChallengeBtn"),
+
+        leaderboardBtn: document.getElementById("leaderboardBtn"),
+        leaderboardModal: document.getElementById("leaderboardModal"),
+        leaderboardList: document.getElementById("leaderboardList"),
+        closeLeaderboardBtn: document.getElementById("closeLeaderboardBtn"),
+
+        successOverlay: document.getElementById("successOverlay"),
+        successOverlayExpr: document.getElementById("successOverlayExpr"),
+        successOverlayPoints: document.getElementById("successOverlayPoints"),
       };
 
       const animalPool = [
@@ -1169,65 +1235,38 @@
             }
           }
         },
-        path: {
-          title: "המסלול הקסום",
-          instr: "העבירי את האצבע מהרכבת לדגל, וחזרה!",
+        stars: {
+          title: "כוכבי המזל",
+          instr: "תפסו 8 כוכבים נוצצים לפני שהם נעלמים!",
           run(container, onWin, animal) {
-            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none; pointer-events:none; z-index:2;">
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none; z-index:5;">
               <div style="font-size:80px;">${animal.emoji}</div>
               <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
-            </div><canvas style="position:absolute; inset:0; cursor:crosshair; width:100%; height:100%;"></canvas>`;
-            const canvas = container.querySelector("canvas");
+            </div>`;
             const res = container.querySelector("#res");
-            const cw = container.clientWidth || 340;
-            const ch = container.clientHeight || 340;
-            canvas.width = cw;
-            canvas.height = ch;
-
-            const ctx = canvas.getContext("2d");
-            const midY = ch / 2;
-            ctx.strokeStyle = "rgba(255,255,255,0.1)";
-            ctx.lineWidth = 44;
-            ctx.lineCap = "round";
-            ctx.beginPath();
-            ctx.moveTo(60, midY);
-            ctx.lineTo(cw - 60, midY);
-            ctx.stroke();
-            ctx.fillStyle = "var(--accent)";
-            ctx.font = "34px Arial";
-            ctx.fillText("🚀", 25, midY + 12);
-            ctx.fillText("🏁", cw - 55, midY + 12);
-
-            let started = false;
-            let reachedEnd = false;
-            let won = false;
-            const move = (e) => {
-              if (won) return;
-              const rect = canvas.getBoundingClientRect();
-              const touch = e.touches ? e.touches[0] : e;
-              const x = touch.clientX - rect.left;
-              if (x < 80) started = true;
-              if (started && x > (cw - 80)) reachedEnd = true;
-              if (reachedEnd && x < 80) {
-                won = true;
+            let count = 0;
+            const spawn = () => {
+              if (count >= 8) { res.style.display = "flex"; onWin(); return; }
+              const s = document.createElement("div");
+              s.style.cssText = `position:absolute; font-size:40px; cursor:pointer; left:${Math.random() * 80 + 5}%; top:${Math.random() * 80 + 5}%; transition:transform 0.2s, opacity 0.5s; opacity:0; transform:scale(0);`;
+              s.textContent = "⭐";
+              container.appendChild(s);
+              setTimeout(() => { s.style.opacity = "1"; s.style.transform = "scale(1.2)"; }, 50);
+              const timer = setTimeout(() => {
+                s.style.opacity = "0";
+                s.style.transform = "scale(0)";
+                setTimeout(() => { if (s.parentNode) { s.remove(); spawn(); } }, 500);
+              }, 1800);
+              s.onclick = () => {
+                clearTimeout(timer);
                 playSound("success");
-                res.style.display = "flex";
-                onWin();
-              }
+                count++;
+                s.style.transform = "scale(2) rotate(20deg)";
+                s.style.opacity = "0";
+                setTimeout(() => { s.remove(); spawn(); }, 200);
+              };
             };
-            const handleStart = (e) => {
-              if (e.type === "touchstart") e.preventDefault();
-              canvas.addEventListener(e.type === "touchstart" ? "touchmove" : "mousemove", move);
-              move(e);
-            };
-            const handleEnd = () => {
-              canvas.removeEventListener("mousemove", move);
-              canvas.removeEventListener("touchmove", move);
-            };
-            canvas.addEventListener("mousedown", handleStart);
-            canvas.addEventListener("touchstart", handleStart);
-            window.addEventListener("mouseup", handleEnd);
-            window.addEventListener("touchend", handleEnd);
+            spawn();
           }
         }
       };
@@ -1247,18 +1286,28 @@
         els.challengeModal.style.display = "flex";
 
         game.run(els.questContainer, () => {
-          els.finishChallengeBtn.style.display = "inline-block";
-          triggerConfetti();
-        }, animal);
-
-        els.finishChallengeBtn.onclick = () => {
           const typed = Number(els.bonusAnswerInput.value.trim());
           const isCorrect = !Number.isNaN(typed) && typed === (a * b);
 
-          els.challengeModal.style.display = "none";
-          markDone(a, b, animal, isCorrect);
-          save();
-        };
+          showSuccessOverlay(a, b, isCorrect ? 3 : 1);
+
+          setTimeout(() => {
+            els.challengeModal.style.display = "none";
+            markDone(a, b, animal, isCorrect);
+            save();
+            newRound();
+          }, 2000);
+        }, animal);
+      }
+
+      function showSuccessOverlay(a, b, points) {
+        els.successOverlayExpr.textContent = `${a} × ${b} = ${a * b}`;
+        els.successOverlayPoints.textContent = `+${points} נקודות!`;
+        els.successOverlay.style.display = "flex";
+        triggerConfetti();
+        setTimeout(() => {
+          els.successOverlay.style.display = "none";
+        }, 2000);
       }
 
       function triggerConfetti() {
@@ -1590,7 +1639,6 @@
 
         buildGrid();
         updateUI();
-        setFeedback(`כל הכבוד! ${bonus ? "בונוס! " : ""}גילית שמשוואה היא: ${a} × ${b} = ${a * b}`, "good");
       }
 
       function submit() {
@@ -1820,9 +1868,46 @@
           if (e.target === els.kingdomModal) closeKingdomModal();
         });
 
+        els.leaderboardBtn.addEventListener("click", openLeaderboard);
+        els.closeLeaderboardBtn.addEventListener("click", closeLeaderboard);
+        els.leaderboardModal.addEventListener("click", (e) => {
+          if (e.target === els.leaderboardModal) closeLeaderboard();
+        });
+
         els.createProfileBtn.addEventListener("click", createProfile);
         els.newProfileName.addEventListener("keydown", (e) => {
           if (e.key === "Enter") createProfile();
+        });
+      }
+
+      function openLeaderboard() {
+        els.leaderboardModal.style.display = "flex";
+        renderLeaderboard();
+      }
+
+      function closeLeaderboard() {
+        els.leaderboardModal.style.display = "none";
+      }
+
+      function renderLeaderboard() {
+        const sorted = Object.values(state.profiles).sort((a, b) => (b.stats.points || 0) - (a.stats.points || 0));
+        els.leaderboardList.innerHTML = "";
+        sorted.forEach((p, i) => {
+          const d = document.createElement("div");
+          d.className = "profileCard";
+          d.style.cursor = "default";
+          d.innerHTML = `
+            <div class="pLeft">
+              <div style="font-size:20px; font-weight:900; width:30px; color:var(--accent); text-align:center;">${i + 1}</div>
+              <div class="avatar">${p.avatar}</div>
+              <div>
+                <div class="pName">${p.name}</div>
+                <div class="pMeta">${p.animals.length} חיות | ${Object.keys(p.done).length} תאים</div>
+              </div>
+            </div>
+            <div style="font-size:22px; font-weight:1000; color:var(--good);">${p.stats.points || 0} נק׳</div>
+          `;
+          els.leaderboardList.appendChild(d);
         });
       }
 
