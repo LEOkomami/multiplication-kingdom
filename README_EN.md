@@ -1,43 +1,35 @@
-# Multiplication Kingdom, a fantasy animal adventure
+# Multiplication Kingdom - Magic Animal Adventure 🦄✨
 
-## Project goal
-A dynamic web game for kids to practice multiplication tables in a fun, simple, non intimidating way. No general knowledge, no tricky puzzles, only multiplication.
+Multiplication Kingdom is a vibrant and dynamic web application for children, designed to practice multiplication tables in a fun, empowering, and non-intimidating way.
 
-## How it works
-- The game shows a multiplication grid (up to 10 or 12).
-- Each cell is a "quest".
-- A correct answer conquers the cell and awards a fantasy animal to the collection.
-- Progress is saved locally using browser LocalStorage.
+## 🚀 Key Features
 
-## Profiles
-You can create multiple profiles (for siblings or friends). Each profile has its own:
-- conquered cells progress
-- animal collection
-- stats (correct, wrong, streak)
-- settings (10 or 12, table focus, show answers)
+### 1. Native Web App (PWA)
+The game is a fully functional **Progressive Web App**. You can "Add to Home Screen" on an iPad, Android tablet, or PC to launch it in full-screen mode without a browser bar. It supports offline play via Service Workers.
 
-## Game modes
-1) Quest  
-One question at a time, calm progression through new cells.
+### 2. The Champions' Leaderboard 🏆
+Positive competition comes to the kingdom! A dedicated leaderboard page ranks all local profiles by their total points. Track who has collected the most animals and conquered the most cells.
 
-2) Sprint  
-A 60 second timer, answer as many as possible for fast practice.
+### 3. Visual Magic Quests 🌟
+Instead of just entering numbers, every cell on the grid is a visual "Quest":
+- **Magic Scratch**: Scratch away the clouds to reveal the animal.
+- **Bubble Pop**: Pop 10 magical bubbles.
+- **Lucky Stars**: Catch jumping stars before they fade away.
+- **Match the Twin**: A visual logic and speed challenge.
 
-## Quick customization
-- "Max number": 10 or 12.
-- "Table focus": focus a specific table (for example 7) or auto.
-- "Show answers on grid": show or hide results in conquered cells.
+### 4. Scoring & Knowledge Bonus
+- **Standard Conquest**: Complete a mini-game to earn 1 point and an animal for your collection.
+- **Knowledge Bonus**: If you solve the multiplication fact numerically in the bonus box before finishing the quest, you earn **3 points!**
 
-## Files
-- `index.html` includes everything, UI, logic, profiles, persistence.
-- `.github/workflows/static.yml` deploys to GitHub Pages.
+## 💻 Hardware & Requirements
+- **Optimization**: Specifically designed for **Tablets** and Desktops.
+- **Mobile Deterrent**: On small smartphone screens, a notification explains that the game is optimized for larger displays to ensure the best learning experience.
+- **Branding**: A KONAMI APP.
 
-## Deploy to GitHub Pages
-1) Create a new GitHub repository.
-2) Upload the files.
-3) The GitHub Action will run automatically.
-4) Go to Settings -> Pages and ensure the source is set to GitHub Actions.
+## 🛡️ Privacy & Tech Stack
+- **Serverless**: All data (profiles, points, animals) is saved exclusively in your browser's **LocalStorage**.
+- **Complete Privacy**: No data collection, no accounts, and no cloud uploads.
+- **Tech Stack**: Vanilla JS, HTML5 Canvas, CSS3 Grid, Service Workers.
 
-## Privacy note
-- All data stays in LocalStorage on the local machine.
-- No backend, no accounts, no analytics.
+## 🛠️ Deployment
+Pre-configured for **GitHub Pages** using GitHub Actions. Any code push deploys to the web automatically within minutes.
