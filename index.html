@@ -1596,7 +1596,6 @@
         state.current = { a, b, ans, key };
 
         els.qExpr.textContent = `${a} × ${b} = ?`;
-        els.targetCell.textContent = key;
 
         setStory();
         setFeedback(manual ? "בחרת תא ידנית. עברי את האתגר כדי לכבוש אותו." : "עברי את האתגר כדי לכבוש את התא ולהרוויח חיה.", "neutral");
@@ -1616,8 +1615,6 @@
         if (!next) {
           state.current = null;
           els.qExpr.textContent = "כל הכבוד, השלמת את כל הלוח 🎉";
-          els.targetCell.textContent = "-";
-          els.qStory.textContent = "אפשר לשנות ל-12 ולהמשיך, או לאפס את הפרופיל למסע חדש.";
           setFeedback("סיימת את כולם. אלופה!", "good");
           highlightCurrentCell();
           updateUI();
@@ -1858,7 +1855,6 @@
       }
 
       function wire() {
-        els.newRoundBtn.addEventListener("click", newRound);
         els.resetProfileBtn.addEventListener("click", resetActiveProfile);
 
         els.maxN.addEventListener("change", setMaxN);
