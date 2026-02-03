@@ -1324,7 +1324,7 @@
       function defaultProfile(name, avatar) {
         return {
           id: "p_" + Math.random().toString(16).slice(2) + "_" + now(),
-          name: (name || "אורחת").trim().slice(0, 20),
+          name: (name || "אורח/ת").trim().slice(0, 20),
           avatar: avatar || "🦊",
           createdAt: now(),
           settings: {
