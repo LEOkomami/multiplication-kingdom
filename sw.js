@@ -1,7 +1,8 @@
-const CACHE_NAME = 'multi-kingdom-v6';
+const CACHE_NAME = 'multi-kingdom-v13';
 const ASSETS = [
     './',
     './index.html',
+    './style.css',
     './manifest.json',
     './icon-512.png'
 ];

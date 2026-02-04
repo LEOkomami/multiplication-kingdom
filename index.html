@@ -10,730 +10,8 @@
   <link rel="apple-touch-icon" href="icon-512.png">
   <link rel="manifest" href="manifest.json">
   <title>ממלכת הכפל - הרפתקת חיות</title>
-  <style>
-    :root {
-      --bg: #0b1020;
-      --panel: #111a33;
-      --panel2: #0f1730;
-      --text: #e8ecff;
-      --muted: #aab3d6;
-      --good: #2bd576;
-      --bad: #ff4d6d;
-      --warn: #ffd166;
-      --cell: #18244a;
-      --cellDone: #1e3a66;
-      --cellHi: #2a3d7a;
-      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-      --radius: 16px;
-      --gap: 12px;
-      --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      --accent: #ffd166;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glassBorder: rgba(255, 255, 255, 0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: var(--font);
-      background: radial-gradient(1000px 600px at 20% 0%, #1a2a66 0%, rgba(26, 42, 102, 0) 60%),
-        radial-gradient(900px 500px at 90% 10%, #3a1f66 0%, rgba(58, 31, 102, 0) 55%),
-        var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      padding: 18px 24px 8px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: .4px;
-      background: linear-gradient(90deg, #fff, var(--accent));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .sub {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 12px 24px 26px;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 20px;
-    }
-
-    @media (max-width: 1020px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02));
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border: 1px solid var(--glassBorder);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .card .hd {
-      padding: 14px 14px 10px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
-      background: rgba(0, 0, 0, .12);
-      flex-wrap: wrap;
-    }
-
-    .card .bd {
-      padding: 14px;
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn {
-      appearance: none;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(255, 255, 255, .06);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 13px;
-      transition: transform .06s ease, background .2s ease, border-color .2s ease;
-      user-select: none;
-    }
-
-    .btn:hover {
-      background: rgba(255, 255, 255, .1);
-    }
-
-    .btn:active {
-      transform: scale(.98);
-    }
-
-    .btn.primary {
-      border-color: rgba(43, 213, 118, .35);
-      background: rgba(43, 213, 118, .14);
-    }
-
-    .btn.danger {
-      border-color: rgba(255, 77, 109, .35);
-      background: rgba(255, 77, 109, .12);
-    }
-
-    .btn.warn {
-      border-color: rgba(255, 209, 102, .35);
-      background: rgba(255, 209, 102, .12);
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .1);
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .pill b {
-      color: var(--text);
-      font-size: 12px;
-    }
-
-    .select {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    select {
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(255, 255, 255, .06);
-      color: var(--text);
-      font-weight: 700;
-      outline: none;
-    }
-
-    .tiny {
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .sr {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .gridWrap {
-      padding: 14px;
-      overflow-x: auto;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 64px repeat(10, 1fr);
-      gap: 10px;
-      width: 100%;
-    }
-
-    .cell {
-      background: rgba(255, 255, 255, .04);
-      border: 1px solid rgba(255, 255, 255, .08);
-      border-radius: 12px;
-      aspect-ratio: 1 / 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-weight: 800;
-      font-size: 16px;
-      color: var(--text);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cell.head {
-      background: rgba(255, 255, 255, .12);
-      font-weight: 900;
-      font-size: 18px;
-    }
-
-    .cell.corner {
-      background: rgba(255, 255, 255, .12);
-      font-weight: 900;
-      font-size: 20px;
-    }
-
-    .cell.work {
-      background: rgba(255, 255, 255, .03);
-      border-color: rgba(255, 255, 255, .08);
-      cursor: pointer;
-      transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 4px;
-      text-align: center;
-      line-height: 1.1;
-    }
-
-    .cell.work:hover {
-      background: rgba(42, 61, 122, .75);
-      border-color: rgba(255, 255, 255, .18);
-    }
-
-    .cell.work:active {
-      transform: scale(.985);
-    }
-
-    .cell.done {
-      background: rgba(30, 58, 102, .7);
-      border-color: rgba(43, 213, 118, .25);
-      color: rgba(232, 236, 255, .95);
-    }
-
-    .cell.hi {
-      outline: 2px solid rgba(255, 209, 102, .55);
-      outline-offset: 1px;
-    }
-
-    .cell .mini {
-      font-size: 16px;
-      color: var(--text);
-      font-weight: 1000;
-      line-height: 1.1;
-      display: block;
-    }
-
-    .cell .submini {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 600;
-      line-height: 1.2;
-      margin-top: 4px;
-      opacity: 0.8;
-    }
-
-    .cell.done .mini {
-      font-size: 24px;
-    }
-
-    .gameBox {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .panel {
-      background: rgba(0, 0, 0, .2);
-      border: 1px solid rgba(255, 255, 255, .05);
-      border-radius: 12px;
-      padding: 8px;
-    }
-
-    .qTop {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .qExpr {
-      font-size: 28px;
-      font-weight: 1000;
-      letter-spacing: .3px;
-    }
-
-    .qStory {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-      min-height: 18px;
-    }
-
-    .answerRow {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-
-    input[type="number"] {
-      width: 150px;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(255, 255, 255, .06);
-      color: var(--text);
-      font-size: 16px;
-      font-weight: 900;
-      outline: none;
-    }
-
-    input[type="number"]:focus {
-      border-color: rgba(255, 209, 102, .5);
-      box-shadow: 0 0 0 4px rgba(255, 209, 102, .12);
-    }
-
-    .feedback {
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, .12);
-      background: rgba(255, 255, 255, .05);
-      font-weight: 900;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .feedback.good {
-      border-color: rgba(43, 213, 118, .35);
-      background: rgba(43, 213, 118, .12);
-    }
-
-    .feedback.bad {
-      border-color: rgba(255, 77, 109, .35);
-      background: rgba(255, 77, 109, .12);
-    }
-
-    .stats {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .stat {
-      background: rgba(255, 255, 255, .05);
-      border: 1px solid rgba(255, 255, 255, .10);
-      border-radius: 20px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .stat .k {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      margin-bottom: 5px;
-    }
-
-    .stat .v {
-      font-size: 52px;
-      font-weight: 1000;
-      color: var(--accent);
-      line-height: 1;
-      text-shadow: 0 0 20px rgba(255, 209, 102, 0.3);
-    }
-
-    .stat .v i {
-      font-style: normal;
-      margin-inline-end: 10px;
-    }
-
-    .collection {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .badge {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .10);
-      font-size: 12px;
-      color: rgba(232, 236, 255, .95);
-      font-weight: 900;
-    }
-
-    .badge span {
-      opacity: .9;
-      font-weight: 800;
-      color: var(--muted);
-    }
-
-    .kingdomGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 12px;
-      max-height: 60vh;
-      overflow-y: auto;
-      padding: 10px;
-    }
-
-    .kCell {
-      background: rgba(255, 255, 255, .05);
-      border: 1px solid rgba(255, 255, 255, .10);
-      border-radius: 14px;
-      padding: 12px 8px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .kEmoji {
-      font-size: 28px;
-    }
-
-    .kName {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .kFact {
-      font-size: 10px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .btn.icon {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      font-size: 18px;
-    }
-
-    .modalBack {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, .6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .modal {
-      width: min(640px, 100%);
-      background: rgba(17, 26, 51, 0.8);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-      animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes modalSlide {
-      from {
-        transform: translateY(30px) scale(0.95);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-    }
-
-    .modal .mhd {
-      padding: 14px 14px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      background: rgba(0, 0, 0, .12);
-    }
-
-    .modal .mbd {
-      padding: 14px;
-    }
-
-    .profiles {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    @media (max-width: 640px) {
-      .profiles {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .profileCard {
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, .05);
-      border: 1px solid rgba(255, 255, 255, .10);
-      cursor: pointer;
-      transition: transform .06s ease, background .2s ease, border-color .2s ease;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .profileCard:hover {
-      background: rgba(255, 255, 255, .08);
-      border-color: rgba(255, 255, 255, .18);
-    }
-
-    .profileCard:active {
-      transform: scale(.99);
-    }
-
-    .pLeft {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      background: rgba(255, 255, 255, .08);
-      border: 1px solid rgba(255, 255, 255, .10);
-    }
-
-    .pName {
-      font-weight: 1000;
-    }
-
-    .pMeta {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      margin-top: 2px;
-    }
-
-    .pActions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .formRow {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      align-items: center;
-    }
-
-    .textInput,
-    select {
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(255, 255, 255, .06);
-      color: var(--text);
-      font-size: 16px;
-      font-weight: 800;
-      outline: none;
-      transition: border-color .2s ease, box-shadow .2s ease;
-    }
-
-    #newProfileName {
-      width: 220px;
-    }
-
-    select {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: left 10px center;
-      padding-left: 40px;
-    }
-
-    option {
-      background-color: #111a33;
-      color: #fff;
-    }
-
-    .textInput:focus,
-    select:focus {
-      border-color: rgba(255, 209, 102, .5);
-      box-shadow: 0 0 0 4px rgba(255, 209, 102, .12);
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    #mobileBlock {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 9999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 30px;
-      text-align: center;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        overflow: hidden;
-      }
-
-      #mobileBlock {
-        display: flex;
-      }
-    }
-
-    #successOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(11, 16, 32, 0.9);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      z-index: 10000;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .successTitle {
-      font-size: 60px;
-      margin-bottom: 20px;
-      animation: modalSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .successExpr {
-      font-size: 48px;
-      font-weight: 1000;
-      color: var(--accent);
-      margin-bottom: 10px;
-    }
-
-    .successPoints {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--good);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <script src="translations.js"></script>
 </head>
 
 <body>
@@ -747,15 +25,20 @@
   <header>
     <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
       <div>
-        <h1>ממלכת הכפל - הרפתקת חיות</h1>
-        <div class="sub">ברוכים הבאים לממלכה! כבשו תאים, אספו חיות נדירות ושברו שיאים.</div>
+        <h1 data-t="headerTitle">ממלכת הכפל 🦁</h1>
+        <div class="sub" data-t="headerSub">ברוכים הבאים לממלכה! כבשו תאים, אספו חיות נדירות ושברו שיאים.</div>
       </div>
       <div class="controls">
-        <span class="pill">שחקן/ית: <b id="activeProfileName">-</b></span>
+        <span class="pill"><span data-t="player">שחקן/ית:</span> <b id="activeProfileName">-</b></span>
+        <select id="langSelect" class="langSelect" title="Language">
+          <option value="he">🇮🇱 עברית</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="de">🇩🇪 Deutsch</option>
+        </select>
         <button class="btn icon" id="toggleSoundBtn" title="צלילים" type="button">🔊</button>
-        <button class="btn" id="leaderboardBtn" type="button">טבלת האלופים</button>
-        <button class="btn" id="profilesBtn" type="button">פרופילים</button>
-        <button class="btn danger" id="resetProfileBtn" type="button">איפוס פרופיל</button>
+        <button class="btn" id="leaderboardBtn" data-t="leaderboardBtn" type="button">טבלת האלופים</button>
+        <button class="btn" id="profilesBtn" data-t="profilesBtn" type="button">פרופילים</button>
+        <button class="btn danger" id="resetProfileBtn" data-t="resetBtn" type="button">איפוס פרופיל</button>
       </div>
     </div>
   </header>
@@ -771,11 +54,12 @@
 
       <div class="hd">
         <div class="select">
-          <label class="tiny" for="maxN">עד איזה מספר?</label>
-          <select id="maxN">
-            <option value="10" selected>10</option>
-            <option value="12">12</option>
-          </select>
+          <label class="pill">
+            <span data-t="maxNLabel">לוח עד:</span>
+            <select id="maxN">
+              <option value="10" selected>10</option>
+              <option value="12">12</option>
+            </select>
         </div>
       </div>
 
@@ -790,11 +74,11 @@
 
           <div class="stats">
             <div class="stat">
-              <div class="k">🏆 נקודות צבורות</div>
+              <div class="k" data-t="scorePoints">נקודות</div>
               <div class="v" id="totalPoints">0</div>
             </div>
             <div class="stat">
-              <div class="k">🦁 חיות באוסף</div>
+              <div class="k" data-t="scoreAnimals">חיות</div>
               <div class="v" id="animalsCount">0</div>
             </div>
           </div>
@@ -827,23 +111,28 @@
 
         <div style="margin-top:12px;" class="profiles" id="profilesList"></div>
 
-        <div style="margin-top:14px;" class="panel">
-          <div class="pill">הוסף פרופיל חדש</div>
-          <div class="formRow">
-            <input class="textInput" id="newProfileName" placeholder="שם (למשל ריף)" maxlength="20" />
-            <select id="newProfileAvatar">
-              <option value="🦊">🦊 שועל</option>
-              <option value="🐺">🐺 זאב</option>
-              <option value="🦁">🦁 אריה</option>
-              <option value="🐯">🐯 טיגריס</option>
-              <option value="🐻">🐻 דוב</option>
-              <option value="🦉">🦉 ינשוף</option>
-              <option value="🐲">🐲 דרקון</option>
-              <option value="🦄">🦄 חד קרן</option>
-              <option value="🐬">🐬 דולפין</option>
-              <option value="🐴">🐴 סוס</option>
-            </select>
-            <button class="btn primary" id="createProfileBtn" type="button">צור</button>
+        <div style="margin-top:14px;">
+          <div class="mhd">
+            <div class="pill" data-t="createProfileTitle">יצירת פרופיל חדש</div>
+          </div>
+          <div class="mbd">
+            <div class="controls formRow">
+              <input type="text" id="newProfileName" class="textInput" placeholder="שם (לדוגמה: נועם)"
+                data-t-placeholder="namePlace" />
+              <select id="newProfileAvatar" title="Avatar">
+                <option value="🦊">🦊</option>
+                <option value="🦁">🦁</option>
+                <option value="🦄">🦄</option>
+                <option value="🐸">🐸</option>
+                <option value="🐵">🐵</option>
+                <option value="🐼">🐼</option>
+                <option value="🐞">🐞</option>
+                <option value="🦋">🦋</option>
+              </select>
+              <button class="btn primary" id="createProfileBtn" data-t="createBtn" type="button">צור וכנס
+                לממלכה</button>
+            </div>
+            <div class="profiles" id="profilesList" style="margin-top:20px;"></div>
           </div>
           <div class="note" style="margin-top:10px;">
             טיפ: אפשר ליצור גם פרופיל לאחות, או מצב "אורח" בשביל חברים.
@@ -872,19 +161,23 @@
         <div id="bonusSection"
           style="margin-top:25px; background:rgba(255,209,102,0.15); padding:30px; border-radius:30px; border:4px dashed var(--accent); position:relative; overflow:hidden;">
           <div
-            style="margin-bottom:15px; font-weight:1000; font-size:28px; color:var(--accent); text-shadow: 0 0 15px rgba(255,209,102,0.5);">
+            style="margin-bottom:15px; font-weight:1000; font-size:28px; color:var(--accent); text-shadow: 0 0 15px rgba(255,209,102,0.5);"
+            data-t="bonusTitle">
             💎 בונוס: יודעים את התוצאה?</div>
           <div style="display:flex; align-items:center; justify-content:center; gap:20px;">
             <input type="number" id="bonusAnswerInput" class="textInput" placeholder="?"
               style="width:160px; height:90px; text-align:center; font-size:48px; border-width:3px; border-color:var(--accent); background:rgba(0,0,0,0.5); border-radius:20px;" />
             <div style="text-align:right;">
-              <div style="font-size:22px; font-weight:1000; color:var(--good);">3+ נקודות בונוס!</div>
-              <div class="note" style="font-size:16px; font-weight:800; opacity:0.8;">מלא לפני פתרון המשימה</div>
+              <div style="font-size:22px; font-weight:1000; color:var(--good);" data-t="bonusPoints">3+ נקודות בונוס!
+              </div>
+              <div class="note" style="font-size:16px; font-weight:800; opacity:0.8;" data-t="bonusNote">מלא לפני פתרון
+                המשימה</div>
             </div>
           </div>
         </div>
 
-        <button class="btn primary" id="finishChallengeBtn" style="margin-top:20px; display:none;" type="button">המשך
+        <button class="btn primary" id="finishChallengeBtn" style="margin-top:20px; display:none;" type="button"
+          data-t="continueBtn">המשך
           הלאה!</button>
       </div>
     </div>
@@ -893,9 +186,9 @@
   <div class="modalBack" id="kingdomModal" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Kingdom">
       <div class="mhd">
-        <div class="pill">הממלכה שלי: כל החיות שאספת</div>
+        <div class="pill" data-t="kingdomTitle">הממלכה שלי: כל החיות שאספת</div>
         <div class="controls">
-          <button class="btn" id="closeKingdomBtn" type="button">סגור</button>
+          <button class="btn" id="closeKingdomBtn" data-t="closeBtn" type="button">סגור</button>
         </div>
       </div>
       <div class="mbd">
@@ -907,13 +200,13 @@
   <div class="modalBack" id="leaderboardModal" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Leaderboard">
       <div class="mhd">
-        <div class="pill">טבלת האלופים 🏆</div>
+        <div class="pill" data-t="leaderboardTitle">טבלת האלופים 🏆</div>
         <div class="controls">
-          <button class="btn" id="closeLeaderboardBtn" type="button">סגור</button>
+          <button class="btn" id="closeLeaderboardBtn" data-t="closeBtn" type="button">סגור</button>
         </div>
       </div>
       <div class="mbd">
-        <div class="note">כל השחקנים/ות בממלכה וההישגים שלהם:</div>
+        <div class="note" data-t="leaderboardNote">כל השחקנים/ות בממלכה וההישגים שלהם:</div>
         <div id="leaderboardList" style="margin-top:15px; display:grid; gap:10px;"></div>
       </div>
     </div>
@@ -922,10 +215,15 @@
   <div class="modalBack" id="welcomeModal" aria-hidden="true" style="z-index: 2000;">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Welcome">
       <div class="mhd">
-        <div class="pill">ברוכים הבאים לממלכת הכפל! 🏰</div>
+        <div class="pill" data-t="welcomeTitle">ברוכים הבאים לממלכת הכפל! 🏰</div>
+        <select id="welcomeLangSelect" class="langSelect" style="padding: 6px 10px; font-size: 12px; width: auto;">
+          <option value="he">🇮🇱</option>
+          <option value="en">🇺🇸</option>
+          <option value="de">🇩🇪</option>
+        </select>
       </div>
       <div class="mbd" style="text-align: center;">
-        <div style="font-size: 20px; margin-bottom: 20px; line-height: 1.6;">
+        <div style="font-size: 20px; margin-bottom: 20px; line-height: 1.6;" data-t="welcomeText">
           בממלכה הזו, כל תרגיל כפל הוא <b>משימה קסומה</b>!<br>
           פתרו חידות, גלו חיות נדירות, והפכו לאלופי הכפל. 🏆
         </div>
@@ -933,19 +231,20 @@
         <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 25px;">
           <div class="stat">
             <div class="v">🔮</div>
-            <div class="k">פתרו משימות</div>
+            <div class="k" data-t="questSolved">פתרו משימות</div>
           </div>
           <div class="stat">
             <div class="v">🦁</div>
-            <div class="k">אספו חיות</div>
+            <div class="k" data-t="questCollect">אספו חיות</div>
           </div>
           <div class="stat">
             <div class="v">⭐</div>
-            <div class="k">צברו נקודות</div>
+            <div class="k" data-t="questScore">צברו נקודות</div>
           </div>
         </div>
 
-        <button class="btn primary" id="startGameBtn" style="font-size: 20px; padding: 15px 30px; width: 100%;">מתחילים
+        <button class="btn primary" id="startGameBtn" style="font-size: 20px; padding: 15px 30px; width: 100%;"
+          data-t="startAdv">מתחילים
           בהרפתקה! 🚀</button>
 
         <div
@@ -954,14 +253,14 @@
           <div
             style="width: 20px; height: 20px; border: 2px solid var(--muted); border-radius: 4px; display: flex; align-items: center; justify-content: center;"
             id="dontShowCheckbox"></div>
-          <div class="tiny" style="font-size: 14px;">אל תציג זאת שוב</div>
+          <div class="tiny" style="font-size: 14px;" data-t="dontShow">אל תציג זאת שוב</div>
         </div>
       </div>
     </div>
   </div>
 
   <div id="successOverlay">
-    <div class="successTitle">⭐ מעולה! ⭐</div>
+    <div class="successTitle" data-t="successTitle">⭐ מעולה! ⭐</div>
     <div class="successExpr" id="successOverlayExpr">2 × 2 = 4</div>
     <div class="successPoints" id="successOverlayPoints">+1 נקודות</div>
   </div>
@@ -1035,26 +334,26 @@
       els.feedback = document.getElementById("feedback") || {};
 
       const animalPool = [
-        { emoji: "🦊", name: "שועל ערפל" },
-        { emoji: "🐺", name: "זאב ירח" },
-        { emoji: "🦁", name: "אריה זהב" },
-        { emoji: "🐯", name: "טיגריס ברק" },
-        { emoji: "🐻", name: "דוב יער" },
-        { emoji: "🦉", name: "ינשוף חכם" },
-        { emoji: "🐲", name: "דרקון קטן" },
-        { emoji: "🦄", name: "חד קרן נוצץ" },
-        { emoji: "🐬", name: "דולפין ים" },
-        { emoji: "🐴", name: "סוס רוח" },
-        { emoji: "🦒", name: "ג׳ירפה ענן" },
-        { emoji: "🐼", name: "פנדה במבוק" },
-        { emoji: "🦓", name: "זברה פס" },
-        { emoji: "🦝", name: "דביבון סקרן" },
-        { emoji: "🦔", name: "קיפוד לילה" },
-        { emoji: "🐰", name: "ארנב קפיץ" },
-        { emoji: "🦦", name: "לוטרה שובל" },
-        { emoji: "🐸", name: "צפרדע טל" },
-        { emoji: "🦜", name: "תוכי צבע" },
-        { emoji: "🦋", name: "פרפר קסם" },
+        { emoji: "🦊", name: "שועל ערפל", id: "fox" },
+        { emoji: "🐺", name: "זאב ירח", id: "wolf" },
+        { emoji: "🦁", name: "אריה זהב", id: "lion" },
+        { emoji: "🐯", name: "טיגריס ברק", id: "tiger" },
+        { emoji: "🐻", name: "דוב יער", id: "bear" },
+        { emoji: "🦉", name: "ינשוף חכם", id: "owl" },
+        { emoji: "🐲", name: "דרקון קטן", id: "dragon" },
+        { emoji: "🦄", name: "חד קרן נוצץ", id: "unicorn" },
+        { emoji: "🐬", name: "דולפין ים", id: "dolphin" },
+        { emoji: "🐴", name: "סוס רוח", id: "horse" },
+        { emoji: "🦒", name: "ג׳ירפה ענן", id: "giraffe" },
+        { emoji: "🐼", name: "פנדה במבוק", id: "panda" },
+        { emoji: "🦓", name: "זברה פס", id: "zebra" },
+        { emoji: "🦝", name: "דביבון סקרן", id: "raccoon" },
+        { emoji: "🦔", name: "קיפוד לילה", id: "hedgehog" },
+        { emoji: "🐰", name: "ארנב קפיץ", id: "rabbit" },
+        { emoji: "🦦", name: "לוטרה שובל", id: "otter" },
+        { emoji: "🐸", name: "צפרדע טל", id: "frog" },
+        { emoji: "🦜", name: "תוכי צבע", id: "parrot" },
+        { emoji: "🦋", name: "פרפר קסם", id: "butterfly" },
       ];
 
       function getNextAnimalFor(key) {
@@ -1119,7 +418,7 @@
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transition:opacity 0.5s; z-index:2; pointer-events:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div>
             <canvas style="position:absolute; inset:0; cursor:crosshair; width:100%; height:100%;"></canvas>`;
             const canvas = container.querySelector("canvas");
@@ -1191,7 +490,7 @@
             items.sort(() => Math.random() - 0.5);
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div><div id="grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:10px;"></div>`;
             const g = container.querySelector("#grid");
             const res = container.querySelector("#res");
@@ -1299,7 +598,7 @@
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none; z-index:5;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div>`;
             const res = container.querySelector("#res");
             let count = 0;
@@ -1388,9 +687,104 @@
         mode: "quest",
         maxN: 10,
         soundEnabled: true,
+        lang: "he",
 
         current: null
       };
+
+      function t(key, params = {}) {
+        const lang = state.lang || "he";
+        let str = (translations[lang] && translations[lang][key]) || key;
+        for (const k in params) {
+          str = str.replace(`{${k}}`, params[k]);
+        }
+        return str;
+      }
+
+      function getAnimalName(animal) {
+        if (!animal) return "";
+        if (animal.id) return t("animal_" + animal.id);
+        return animal.name; // Fallback for old data or missing translations
+      }
+
+      function setLanguage(lang) {
+        if (!translations[lang]) return;
+        state.lang = lang;
+        save();
+
+        // Update Direction
+        document.documentElement.lang = lang;
+        document.documentElement.dir = translations[lang].dir;
+
+        // Update Text
+        document.querySelectorAll("[data-t]").forEach(el => {
+          const key = el.getAttribute("data-t");
+          if (translations[lang][key]) el.innerHTML = translations[lang][key];
+        });
+
+        // Update Placeholders
+        document.querySelectorAll("[data-t-placeholder]").forEach(el => {
+          const key = el.getAttribute("data-t-placeholder");
+          if (translations[lang][key]) el.placeholder = translations[lang][key];
+        });
+
+        // Sync Dropdowns
+        if (els.langSelect) els.langSelect.value = lang;
+        if (els.welcomeLangSelect) els.welcomeLangSelect.value = lang;
+
+        updateUI();
+      }
+
+      function toggleLanguage() {
+        const current = state.lang || "he";
+        const next = current === "he" ? "en" : (current === "en" ? "de" : "he");
+        setLanguage(next);
+      }
+
+      function wire() {
+        els.resetProfileBtn.addEventListener("click", resetActiveProfile);
+
+        els.maxN.addEventListener("change", setMaxN);
+
+        els.profilesBtn.addEventListener("click", openProfilesModal);
+        els.closeModalBtn.addEventListener("click", closeProfilesModal);
+        els.modalBack.addEventListener("click", (e) => {
+          if (e.target === els.modalBack) closeProfilesModal();
+        });
+
+        els.toggleSoundBtn.addEventListener("click", toggleSound);
+        els.openKingdomBtn.addEventListener("click", openKingdomModal);
+        els.closeKingdomBtn.addEventListener("click", closeKingdomModal);
+        els.kingdomModal.addEventListener("click", (e) => {
+          if (e.target === els.kingdomModal) closeKingdomModal();
+        });
+
+        els.leaderboardBtn.addEventListener("click", openLeaderboard);
+        els.closeLeaderboardBtn.addEventListener("click", closeLeaderboard);
+        els.leaderboardModal.addEventListener("click", (e) => {
+          if (e.target === els.leaderboardModal) closeLeaderboard();
+        });
+
+        els.createProfileBtn.addEventListener("click", createProfile);
+        els.newProfileName.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") createProfile();
+        });
+
+        // Welcome Modal Wiring
+        els.startGameBtn.addEventListener("click", () => {
+          initAudio();
+          closeWelcome();
+        });
+        els.dontShowWelcomeRow.addEventListener("click", toggleDontShowWelcome);
+
+        // Language Dropdowns
+        els.langSelect = document.getElementById("langSelect");
+        els.welcomeLangSelect = document.getElementById("welcomeLangSelect");
+
+        const onLangChange = (e) => setLanguage(e.target.value);
+        if (els.langSelect) els.langSelect.addEventListener("change", onLangChange);
+        if (els.welcomeLangSelect) els.welcomeLangSelect.addEventListener("change", onLangChange);
+      }
 
       function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
@@ -1424,6 +818,7 @@
           activeProfileId: state.activeProfileId,
           profiles: state.profiles,
           soundEnabled: state.soundEnabled,
+          lang: state.lang
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
       }
@@ -1439,6 +834,7 @@
             if (typeof saved.soundEnabled === "boolean") {
               state.soundEnabled = saved.soundEnabled;
             }
+            if (saved.lang) state.lang = saved.lang;
           }
         } catch (e) { }
       }
@@ -1446,7 +842,7 @@
       function ensureAtLeastOneProfile() {
         if (Object.keys(state.profiles).length > 0) return;
 
-        const p = defaultProfile("אורח/ת", "🦊");
+        const p = defaultProfile(t('player') + " 1", "🦊");
         state.profiles[p.id] = p;
         state.activeProfileId = p.id;
         save();
@@ -1614,7 +1010,7 @@
         if (list.length === 0) {
           const d = document.createElement("div");
           d.className = "note";
-          d.textContent = "עדיין אין חיות. כשתכבשו תא ראשון, תקבלו חיה 🙂";
+          d.textContent = t('noAnimals');
           els.collection.appendChild(d);
           return;
         }
@@ -1622,7 +1018,7 @@
         for (const a of list) {
           const b = document.createElement("div");
           b.className = "badge";
-          b.innerHTML = `<div style="font-size:18px;">${a.emoji}</div><div>${a.name}</div>`;
+          b.innerHTML = `<div style="font-size:18px;">${a.emoji}</div><div>${getAnimalName(a)}</div>`;
           els.collection.appendChild(b);
         }
       }
@@ -1650,7 +1046,7 @@
         els.qExpr.textContent = `${a} × ${b} = ?`;
 
         setStory();
-        setFeedback(manual ? "בחרתם תא ידנית. עברו את האתגר כדי לכבוש אותו." : "עברו את האתגר כדי לכבוש את התא ולהרוויח חיה.", "neutral");
+        setFeedback(manual ? t('feedbackManual') : t('feedbackAuto'), "neutral");
 
         highlightCurrentCell();
       }
@@ -1659,15 +1055,15 @@
       function newRound() {
         const p = getActiveProfile();
         if (!p) {
-          setFeedback("יש לבחור פרופיל כדי להתחיל.", "neutral");
+          setFeedback(t('feedbackSelect'), "neutral");
           return;
         }
 
         const next = pickNextCell();
         if (!next) {
           state.current = null;
-          els.qExpr.textContent = "כל הכבוד, השלמת את כל הלוח 🎉";
-          setFeedback("סיימתם את כולם. אלופים!", "good");
+          els.qExpr.textContent = "🎉";
+          setFeedback(t('feedbackDone'), "good");
           highlightCurrentCell();
           updateUI();
           save();
@@ -1742,7 +1138,7 @@
       function resetActiveProfile() {
         const p = getActiveProfile();
         if (!p) return;
-        const ok = confirm("לאפס את ההתקדמות של הפרופיל הזה? זה ימחק כיבוש וחיות.");
+        const ok = confirm(t('confirmReset'));
         if (!ok) return;
 
         p.done = {};
@@ -1752,7 +1148,7 @@
         save();
         buildGrid();
         updateUI();
-        setFeedback("הפרופיל התאפס. מתחילים מסע חדש 🙂", "neutral");
+        setFeedback(t('feedbackReset'), "neutral");
         newRound();
       }
 
@@ -1786,13 +1182,13 @@
             <div class="pLeft">
               <div class="avatar">${p.avatar || "🦊"}</div>
               <div>
-                <div class="pName">${escapeHtml(p.name || "פרופיל")}</div>
-                <div class="pMeta">כיבוש ${pct}% , נקודות ${p.stats?.points || 0}, חיות ${p.animals?.length || 0}</div>
+                <div class="pName">${escapeHtml(p.name || t('player'))}</div>
+                <div class="pMeta">${pct}% , ${p.stats?.points || 0} ${t('scorePoints')}, ${p.animals?.length || 0} ${t('scoreAnimals')}</div>
               </div>
             </div>
             <div class="pActions">
-              <button class="btn" data-action="select" data-id="${id}" type="button">בחר</button>
-              <button class="btn danger" data-action="delete" data-id="${id}" type="button">מחק</button>
+              <button class="btn" data-action="select" data-id="${id}" type="button">${t('select')}</button>
+              <button class="btn danger" data-action="delete" data-id="${id}" type="button">${t('delete')}</button>
             </div>
           `;
           els.profilesList.appendChild(card);
@@ -1810,14 +1206,14 @@
               closeProfilesModal();
               buildGrid();
               updateUI();
-              setFeedback("ברוכים הבאים להרפתקה, " + (getActiveProfile()?.name || ""), "neutral");
+              setFeedback(t('feedbackWelcome') + (getActiveProfile()?.name || ""), "neutral");
               newRound();
             }
 
             if (action === "delete") {
               const p = state.profiles[id];
               if (!p) return;
-              const ok = confirm("למחוק את הפרופיל '" + p.name + "'? זה יימחק לגמרי.");
+              const ok = confirm(t('confirmDelete', { name: p.name }));
               if (!ok) return;
 
               delete state.profiles[id];
@@ -1899,7 +1295,7 @@
           d.className = "kCell";
           d.innerHTML = `
             <div class="kEmoji">${a.emoji}</div>
-            <div class="kName">${a.name}</div>
+            <div class="kName">${getAnimalName(a)}</div>
             <div class="kFact">${a.key.replace(",", " × ")}</div>
           `;
           els.kingdomGrid.appendChild(d);
@@ -1938,42 +1334,6 @@
         }
       }
 
-      function wire() {
-        els.resetProfileBtn.addEventListener("click", resetActiveProfile);
-
-        els.maxN.addEventListener("change", setMaxN);
-
-        els.profilesBtn.addEventListener("click", openProfilesModal);
-        els.closeModalBtn.addEventListener("click", closeProfilesModal);
-        els.modalBack.addEventListener("click", (e) => {
-          if (e.target === els.modalBack) closeProfilesModal();
-        });
-
-        els.toggleSoundBtn.addEventListener("click", toggleSound);
-        els.openKingdomBtn.addEventListener("click", openKingdomModal);
-        els.closeKingdomBtn.addEventListener("click", closeKingdomModal);
-        els.kingdomModal.addEventListener("click", (e) => {
-          if (e.target === els.kingdomModal) closeKingdomModal();
-        });
-
-        els.leaderboardBtn.addEventListener("click", openLeaderboard);
-        els.closeLeaderboardBtn.addEventListener("click", closeLeaderboard);
-        els.leaderboardModal.addEventListener("click", (e) => {
-          if (e.target === els.leaderboardModal) closeLeaderboard();
-        });
-
-        els.createProfileBtn.addEventListener("click", createProfile);
-        els.newProfileName.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") createProfile();
-        });
-
-        // Welcome Modal Wiring
-        els.startGameBtn.addEventListener("click", () => {
-          initAudio();
-          closeWelcome();
-        });
-        els.dontShowWelcomeRow.addEventListener("click", toggleDontShowWelcome);
-      }
 
       function openLeaderboard() {
         els.leaderboardModal.style.display = "flex";
@@ -2010,12 +1370,18 @@
         load();
         ensureAtLeastOneProfile();
 
+        els.profilesCount = document.getElementById("profilesCount");
+
         if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
           state.activeProfileId = Object.keys(state.profiles)[0] || null;
         }
 
         applyProfileSettingsToGlobal();
         wire();
+
+        // Init Language
+        setLanguage(state.lang || "he");
+
         buildGrid();
         updateUI();
 
