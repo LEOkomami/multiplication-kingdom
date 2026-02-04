@@ -751,7 +751,7 @@
         <div class="sub">ברוכים הבאים לממלכה! כבשו תאים, אספו חיות נדירות ושברו שיאים.</div>
       </div>
       <div class="controls">
-        <span class="pill">שחקנית: <b id="activeProfileName">-</b></span>
+        <span class="pill">שחקן/ית: <b id="activeProfileName">-</b></span>
         <button class="btn icon" id="toggleSoundBtn" title="צלילים" type="button">🔊</button>
         <button class="btn" id="leaderboardBtn" type="button">טבלת האלופים</button>
         <button class="btn" id="profilesBtn" type="button">פרופילים</button>
@@ -873,7 +873,7 @@
           style="margin-top:25px; background:rgba(255,209,102,0.15); padding:30px; border-radius:30px; border:4px dashed var(--accent); position:relative; overflow:hidden;">
           <div
             style="margin-bottom:15px; font-weight:1000; font-size:28px; color:var(--accent); text-shadow: 0 0 15px rgba(255,209,102,0.5);">
-            💎 בונוס: כבר יודעת את התוצאה?</div>
+            💎 בונוס: יודעים את התוצאה?</div>
           <div style="display:flex; align-items:center; justify-content:center; gap:20px;">
             <input type="number" id="bonusAnswerInput" class="textInput" placeholder="?"
               style="width:160px; height:90px; text-align:center; font-size:48px; border-width:3px; border-color:var(--accent); background:rgba(0,0,0,0.5); border-radius:20px;" />
@@ -913,8 +913,49 @@
         </div>
       </div>
       <div class="mbd">
-        <div class="note">כל השחקניות בממלכה וההישגים שלהן:</div>
+        <div class="note">כל השחקנים/ות בממלכה וההישגים שלהם:</div>
         <div id="leaderboardList" style="margin-top:15px; display:grid; gap:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modalBack" id="welcomeModal" aria-hidden="true" style="z-index: 2000;">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Welcome">
+      <div class="mhd">
+        <div class="pill">ברוכים הבאים לממלכת הכפל! 🏰</div>
+      </div>
+      <div class="mbd" style="text-align: center;">
+        <div style="font-size: 20px; margin-bottom: 20px; line-height: 1.6;">
+          בממלכה הזו, כל תרגיל כפל הוא <b>משימה קסומה</b>!<br>
+          פתרו חידות, גלו חיות נדירות, והפכו לאלופי הכפל. 🏆
+        </div>
+
+        <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 25px;">
+          <div class="stat">
+            <div class="v">🔮</div>
+            <div class="k">פתרו משימות</div>
+          </div>
+          <div class="stat">
+            <div class="v">🦁</div>
+            <div class="k">אספו חיות</div>
+          </div>
+          <div class="stat">
+            <div class="v">⭐</div>
+            <div class="k">צברו נקודות</div>
+          </div>
+        </div>
+
+        <button class="btn primary" id="startGameBtn" style="font-size: 20px; padding: 15px 30px; width: 100%;">מתחילים
+          בהרפתקה! 🚀</button>
+
+        <div
+          style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;"
+          id="dontShowWelcomeRow">
+          <div
+            style="width: 20px; height: 20px; border: 2px solid var(--muted); border-radius: 4px; display: flex; align-items: center; justify-content: center;"
+            id="dontShowCheckbox"></div>
+          <div class="tiny" style="font-size: 14px;">אל תציג זאת שוב</div>
+        </div>
       </div>
     </div>
   </div>
@@ -977,6 +1018,11 @@
         leaderboardModal: document.getElementById("leaderboardModal"),
         leaderboardList: document.getElementById("leaderboardList"),
         closeLeaderboardBtn: document.getElementById("closeLeaderboardBtn"),
+
+        welcomeModal: document.getElementById("welcomeModal"),
+        startGameBtn: document.getElementById("startGameBtn"),
+        dontShowWelcomeRow: document.getElementById("dontShowWelcomeRow"),
+        dontShowCheckbox: document.getElementById("dontShowCheckbox"),
 
         successOverlay: document.getElementById("successOverlay"),
         successOverlayExpr: document.getElementById("successOverlayExpr"),
@@ -1562,7 +1608,7 @@
         if (list.length === 0) {
           const d = document.createElement("div");
           d.className = "note";
-          d.textContent = "עדיין אין חיות. כשתכבשי תא ראשון, תקבלי חיה 🙂";
+          d.textContent = "עדיין אין חיות. כשתכבשו תא ראשון, תקבלו חיה 🙂";
           els.collection.appendChild(d);
           return;
         }
@@ -1598,7 +1644,7 @@
         els.qExpr.textContent = `${a} × ${b} = ?`;
 
         setStory();
-        setFeedback(manual ? "בחרת תא ידנית. עברי את האתגר כדי לכבוש אותו." : "עברי את האתגר כדי לכבוש את התא ולהרוויח חיה.", "neutral");
+        setFeedback(manual ? "בחרתם תא ידנית. עברו את האתגר כדי לכבוש אותו." : "עברו את האתגר כדי לכבוש את התא ולהרוויח חיה.", "neutral");
 
         highlightCurrentCell();
       }
@@ -1607,7 +1653,7 @@
       function newRound() {
         const p = getActiveProfile();
         if (!p) {
-          setFeedback("בחרי פרופיל כדי להתחיל.", "neutral");
+          setFeedback("יש לבחור פרופיל כדי להתחיל.", "neutral");
           return;
         }
 
@@ -1615,7 +1661,7 @@
         if (!next) {
           state.current = null;
           els.qExpr.textContent = "כל הכבוד, השלמת את כל הלוח 🎉";
-          setFeedback("סיימת את כולם. אלופה!", "good");
+          setFeedback("סיימתם את כולם. אלופים!", "good");
           highlightCurrentCell();
           updateUI();
           save();
@@ -1758,7 +1804,7 @@
               closeProfilesModal();
               buildGrid();
               updateUI();
-              setFeedback("ברוכה הבאה להרפתקה, " + (getActiveProfile()?.name || ""), "neutral");
+              setFeedback("ברוכים הבאים להרפתקה, " + (getActiveProfile()?.name || ""), "neutral");
               newRound();
             }
 
@@ -1854,6 +1900,38 @@
         }
       }
 
+      let dontShowWelcomeState = false;
+
+      function showWelcome() {
+        const skip = localStorage.getItem(STORAGE_KEY + "_skipWelcome");
+        if (skip === "true") {
+          openProfilesModal();
+          return;
+        }
+        els.welcomeModal.style.display = "flex";
+        els.welcomeModal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeWelcome() {
+        els.welcomeModal.style.display = "none";
+        els.welcomeModal.setAttribute("aria-hidden", "true");
+        if (dontShowWelcomeState) {
+          localStorage.setItem(STORAGE_KEY + "_skipWelcome", "true");
+        }
+        openProfilesModal();
+      }
+
+      function toggleDontShowWelcome() {
+        dontShowWelcomeState = !dontShowWelcomeState;
+        if (dontShowWelcomeState) {
+          els.dontShowCheckbox.style.background = "var(--good)";
+          els.dontShowCheckbox.innerText = "✓";
+        } else {
+          els.dontShowCheckbox.style.background = "transparent";
+          els.dontShowCheckbox.innerText = "";
+        }
+      }
+
       function wire() {
         els.resetProfileBtn.addEventListener("click", resetActiveProfile);
 
@@ -1882,6 +1960,13 @@
         els.newProfileName.addEventListener("keydown", (e) => {
           if (e.key === "Enter") createProfile();
         });
+
+        // Welcome Modal Wiring
+        els.startGameBtn.addEventListener("click", () => {
+          initAudio();
+          closeWelcome();
+        });
+        els.dontShowWelcomeRow.addEventListener("click", toggleDontShowWelcome);
       }
 
       function openLeaderboard() {
@@ -1928,7 +2013,7 @@
         buildGrid();
         updateUI();
 
-        openProfilesModal();
+        showWelcome();
       }
 
       init();
