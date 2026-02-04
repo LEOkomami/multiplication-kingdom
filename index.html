@@ -1340,17 +1340,19 @@
         els.challengeModal.style.display = "flex";
 
         game.run(els.questContainer, () => {
-          const typed = Number(els.bonusAnswerInput.value.trim());
-          const isCorrect = !Number.isNaN(typed) && typed === (a * b);
-
-          showSuccessOverlay(a, b, isCorrect ? 3 : 1);
-
           setTimeout(() => {
-            els.challengeModal.style.display = "none";
-            markDone(a, b, animal, isCorrect);
-            save();
-            newRound();
-          }, 2000);
+            const typed = Number(els.bonusAnswerInput.value.trim());
+            const isCorrect = !Number.isNaN(typed) && typed === (a * b);
+
+            showSuccessOverlay(a, b, isCorrect ? 3 : 1);
+
+            setTimeout(() => {
+              els.challengeModal.style.display = "none";
+              markDone(a, b, animal, isCorrect);
+              save();
+              newRound();
+            }, 2000);
+          }, 1000);
         }, animal);
       }
 
