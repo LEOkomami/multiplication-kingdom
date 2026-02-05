@@ -148,9 +148,7 @@
         <div class="pill" id="questTitle">אתגר קסום</div>
       </div>
       <div class="mbd" style="text-align:center;">
-        <div id="questExpr"
-          style="font-size:80px; font-weight:1000; color:var(--accent); margin-bottom:10px; text-shadow: 0 0 20px rgba(255,209,102,0.4);">
-          ?</div>
+        <div id="questExpr" class="mathExpr">?</div>
         <div id="questInstruction" class="note"
           style="font-size:17px; margin-bottom:15px; font-weight:800; color:var(--text);">טוען אתגר...</div>
         <div id="questContainer"
@@ -261,7 +259,7 @@
 
   <div id="successOverlay">
     <div class="successTitle" data-t="successTitle">⭐ מעולה! ⭐</div>
-    <div class="successExpr" id="successOverlayExpr">2 × 2 = 4</div>
+    <div class="successExpr mathExpr" id="successOverlayExpr">2 × 2 = 4</div>
     <div class="successPoints" id="successOverlayPoints">+1 נקודות</div>
   </div>
 
@@ -413,8 +411,8 @@
 
       const questGames = {
         scratch: {
-          title: "גירוד הקסם",
-          instr: "גרדו את הענן כדי למצוא את החיה!",
+          titleKey: "scratchTitle",
+          instrKey: "scratchInstr",
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transition:opacity 0.5s; z-index:2; pointer-events:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
@@ -456,12 +454,12 @@
           }
         },
         pop: {
-          title: "פיצוץ בועות",
-          instr: "פוצצו 10 בועות כדי לגלות את הסוד!",
+          titleKey: "popTitle",
+          instrKey: "popInstr",
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div>`;
             const res = container.querySelector("#res");
             let count = 0;
@@ -481,12 +479,14 @@
           }
         },
         match: {
-          title: "מצאו את התואם",
-          instr: "לחצו על החיה שמופיעה פעמיים!",
+          titleKey: "matchTitle",
+          instrKey: "matchInstr",
           run(container, onWin, animal) {
             const icons = ["🦄", "🐉", "🧜‍♀️", "🧚", "✨", "🌟", "🏮", "🔮", "💎", "🌈", "🍀", "🍭"];
             const target = animal.emoji;
-            const items = [target, target, ...icons.slice(0, 10)];
+            // Build 12 items: 2 targets + 10 others (filtered if target is in the icons list)
+            const others = icons.filter(i => i !== target).slice(0, 10);
+            const items = [target, target, ...others];
             items.sort(() => Math.random() - 0.5);
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
@@ -507,12 +507,12 @@
           }
         },
         chase: {
-          title: "תפסי את הכוכב",
-          instr: "לחצי על הכוכב הקופץ 6 פעמים!",
+          titleKey: "chaseTitle",
+          instrKey: "chaseInstr",
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div>`;
             const res = container.querySelector("#res");
             let count = 0;
@@ -538,12 +538,12 @@
           }
         },
         order: {
-          title: "סדר הכוכבים",
-          instr: "לחצי על המספרים לפי הסדר: 1 עד 6",
+          titleKey: "orderTitle",
+          instrKey: "orderInstr",
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div>`;
             const res = container.querySelector("#res");
             let next = 1;
@@ -567,12 +567,12 @@
           }
         },
         glow: {
-          title: "אורות הקסם",
-          instr: "הדליקי את כל 8 הכוכבים!",
+          titleKey: "glowTitle",
+          instrKey: "glowInstr",
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
               <div style="font-size:80px;">${animal.emoji}</div>
-              <div style="font-size:24px; font-weight:1000;">${animal.name}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
             </div>`;
             const res = container.querySelector("#res");
             let on = 0;
@@ -593,8 +593,8 @@
           }
         },
         stars: {
-          title: "כוכבי המזל",
-          instr: "תפסו 8 כוכבים נוצצים לפני שהם נעלמים!",
+          titleKey: "starsTitle",
+          instrKey: "starsInstr",
           run(container, onWin, animal) {
             container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none; z-index:5;">
               <div style="font-size:80px;">${animal.emoji}</div>
@@ -625,6 +625,174 @@
             };
             spawn();
           }
+        },
+        crystal: {
+          titleKey: "crystalTitle",
+          instrKey: "crystalInstr",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            const colors = ["#ff4d6d", "#2bd576", "#ffd166"];
+            const order = [0, 1, 2].sort(() => Math.random() - 0.5);
+            let userStep = 0;
+            let playing = true;
+            const btns = [0, 1, 2].map(cIdx => {
+              const b = document.createElement("div");
+              b.style.cssText = `width:80px; height:80px; background:${colors[cIdx]}; border-radius:15px; cursor:pointer; opacity:0.3; transition:all 0.3s;`;
+              return b;
+            });
+            const wrap = document.createElement("div");
+            wrap.style.cssText = "display:flex; gap:20px;";
+            btns.forEach(b => wrap.appendChild(b));
+            container.appendChild(wrap);
+            const showPattern = async () => {
+              for (const i of order) {
+                await new Promise(r => setTimeout(r, 600));
+                btns[i].style.opacity = "1";
+                btns[i].style.transform = "scale(1.2)";
+                playSound("success");
+                await new Promise(r => setTimeout(r, 400));
+                btns[i].style.opacity = "0.3";
+                btns[i].style.transform = "scale(1)";
+              }
+              playing = false;
+            };
+            setTimeout(showPattern, 500);
+            btns.forEach((b, i) => {
+              b.onclick = () => {
+                if (playing) return;
+                if (i === order[userStep]) {
+                  playSound("success");
+                  b.style.opacity = "1";
+                  userStep++;
+                  if (userStep === order.length) {
+                    wrap.style.display = "none";
+                    res.style.display = "flex";
+                    onWin();
+                  }
+                } else {
+                  playSound("error");
+                  userStep = 0;
+                  btns.forEach(btn => btn.style.opacity = "0.3");
+                }
+              };
+            });
+          }
+        },
+        firefly: {
+          titleKey: "fireflyTitle",
+          instrKey: "fireflyInstr",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            let caught = 0;
+            for (let i = 0; i < 6; i++) {
+              const f = document.createElement("div");
+              f.style.cssText = `position:absolute; font-size:24px; cursor:pointer; left:${Math.random() * 80 + 5}%; top:${Math.random() * 80 + 5}%; transition:all 2s ease-in-out; text-shadow: 0 0 10px yellow;`;
+              f.textContent = "✨";
+              container.appendChild(f);
+              const move = () => {
+                if (f.textContent === "🪲") return;
+                f.style.left = (Math.random() * 80 + 5) + "%";
+                f.style.top = (Math.random() * 80 + 5) + "%";
+                setTimeout(move, 2000);
+              };
+              setTimeout(move, 100);
+              f.onclick = () => {
+                if (f.textContent === "🪲") return;
+                f.textContent = "🪲";
+                f.style.fontSize = "32px";
+                f.style.textShadow = "0 0 20px #fff";
+                playSound("success");
+                caught++;
+                if (caught === 6) {
+                  container.querySelectorAll("div:not(#res)").forEach(d => d.remove());
+                  res.style.display = "flex";
+                  onWin();
+                }
+              };
+            }
+          }
+        },
+        potion: {
+          titleKey: "potionTitle",
+          instrKey: "potionInstr",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            const cauldron = document.createElement("div");
+            cauldron.style.cssText = "font-size:100px; margin-bottom:20px; filter:drop-shadow(0 0 10px #8e44ad);";
+            cauldron.textContent = "🧪";
+            container.appendChild(cauldron);
+            const items = ["🍄", "🌿", "💎"];
+            let added = 0;
+            const wrap = document.createElement("div");
+            wrap.style.cssText = "display:flex; gap:30px;";
+            container.appendChild(wrap);
+            items.forEach(icon => {
+              const it = document.createElement("div");
+              it.style.cssText = "font-size:50px; cursor:pointer; transition:all 0.5s;";
+              it.textContent = icon;
+              it.onclick = () => {
+                playSound("success");
+                it.style.transform = "translateY(-100px) scale(0)";
+                it.style.opacity = "0";
+                it.style.pointerEvents = "none";
+                added++;
+                if (added === 3) {
+                  setTimeout(() => {
+                    cauldron.style.filter = "drop-shadow(0 0 30px #fff)";
+                    cauldron.style.transform = "scale(1.2)";
+                    setTimeout(() => {
+                      cauldron.style.display = "none";
+                      wrap.style.display = "none";
+                      res.style.display = "flex";
+                      onWin();
+                    }, 500);
+                  }, 500);
+                }
+              };
+              wrap.appendChild(it);
+            });
+          }
+        },
+        leaf: {
+          titleKey: "leafTitle",
+          instrKey: "leafInstr",
+          run(container, onWin, animal) {
+            container.innerHTML = `<div id="res" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+              <div style="font-size:80px;">${animal.emoji}</div>
+              <div style="font-size:24px; font-weight:1000;">${getAnimalName(animal)}</div>
+            </div>`;
+            const res = container.querySelector("#res");
+            const leafIcons = ["🍂", "🍁", "🍃", "🌿"];
+            let cleared = 0;
+            for (let i = 0; i < 10; i++) {
+              const l = document.createElement("div");
+              l.style.cssText = `position:absolute; font-size:60px; cursor:pointer; left:${Math.random() * 70 + 10}%; top:${Math.random() * 70 + 10}%; transition:all 0.6s; transform:rotate(${Math.random() * 360}deg);`;
+              l.textContent = pick(leafIcons);
+              container.appendChild(l);
+              l.onclick = () => {
+                playSound("success");
+                l.style.transform = `translate(${Math.random() * 400 - 200}px, -300px) rotate(360deg)`;
+                l.style.opacity = "0";
+                cleared++;
+                if (cleared === 10) {
+                  res.style.display = "flex";
+                  onWin();
+                }
+              };
+            }
+          }
         }
       };
 
@@ -634,9 +802,9 @@
         const types = Object.keys(questGames);
         const game = questGames[pick(types)];
 
-        els.questTitle.textContent = game.title;
+        els.questTitle.textContent = t(game.titleKey);
         els.questExpr.textContent = `${a} × ${b}`;
-        els.questInstruction.textContent = game.instr;
+        els.questInstruction.textContent = t(game.instrKey);
         els.questContainer.innerHTML = "";
         els.bonusAnswerInput.value = "";
         els.finishChallengeBtn.style.display = "none";
@@ -661,7 +829,7 @@
 
       function showSuccessOverlay(a, b, points) {
         els.successOverlayExpr.textContent = `${a} × ${b} = ${a * b}`;
-        els.successOverlayPoints.textContent = `+${points} נקודות!`;
+        els.successOverlayPoints.textContent = t("successPoints", { n: points });
         els.successOverlay.style.display = "flex";
         triggerConfetti();
         setTimeout(() => {
