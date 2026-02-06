@@ -88,5 +88,10 @@
     "animal_otter": "לוטרה שובל",
     "animal_frog": "צפרדע טל",
     "animal_parrot": "תוכי צבע",
-    "animal_butterfly": "פרפר קסם"
+    "animal_butterfly": "פרפר קסם",
+    "scoreCrowns": "מלכות",
+    "prestigeTitle": "הישג ענק! 👑",
+    "prestigeDesc": "כבשת את כל הממלכה! רוצה להתחיל משימה חדשה ולקבל כתר?",
+    "prestigeBtn": "התחל ממלכה חדשה",
+    "crownEarned": "זכית בכתר! 👑"
 }

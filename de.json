@@ -88,5 +88,10 @@
     "animal_otter": "Flussotter",
     "animal_frog": "Taufrosch",
     "animal_parrot": "Farbenpapagei",
-    "animal_butterfly": "Zauberschmetterling"
+    "animal_butterfly": "Zauberschmetterling",
+    "scoreCrowns": "Kronen",
+    "prestigeTitle": "Großartige Leistung! 👑",
+    "prestigeDesc": "Du hast das ganze Königreich erobert! Möchtest du eine neue Mission starten und eine Krone verdienen?",
+    "prestigeBtn": "Neues Königreich starten",
+    "crownEarned": "Du hast eine Krone verdient! 👑"
 }

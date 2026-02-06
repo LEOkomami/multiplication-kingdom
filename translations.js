@@ -91,6 +91,11 @@ const translations = {
         animal_frog: "צפרדע טל",
         animal_parrot: "תוכי צבע",
         animal_butterfly: "פרפר קסם",
+        scoreCrowns: "מלכות",
+        prestigeTitle: "הישג ענק! 👑",
+        prestigeDesc: "כבשת את כל הממלכה! רוצה להתחיל משימה חדשה ולקבל כתר?",
+        prestigeBtn: "התחל ממלכה חדשה",
+        crownEarned: "זכית בכתר! 👑",
     },
     en: {
         dir: "ltr",
@@ -184,6 +189,11 @@ const translations = {
         animal_frog: "Dew Frog",
         animal_parrot: "Color Parrot",
         animal_butterfly: "Magic Butterfly",
+        scoreCrowns: "Crowns",
+        prestigeTitle: "Epic Achievement! 👑",
+        prestigeDesc: "You conquered the entire kingdom! Do you want to start a new mission and earn a crown?",
+        prestigeBtn: "Start New Kingdom",
+        crownEarned: "You earned a crown! 👑",
     },
     de: {
         dir: "ltr",
@@ -277,5 +287,10 @@ const translations = {
         animal_frog: "Taufrosch",
         animal_parrot: "Farbenpapagei",
         animal_butterfly: "Zauberschmetterling",
+        scoreCrowns: "Kronen",
+        prestigeTitle: "Großartige Leistung! 👑",
+        prestigeDesc: "Du hast das ganze Königreich erobert! Möchtest du eine neue Mission starten und eine Krone verdienen?",
+        prestigeBtn: "Neues Königreich starten",
+        crownEarned: "Du hast eine Krone verdient! 👑",
     }
 };

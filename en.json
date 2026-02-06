@@ -88,5 +88,10 @@
     "animal_otter": "Stream Otter",
     "animal_frog": "Dew Frog",
     "animal_parrot": "Color Parrot",
-    "animal_butterfly": "Magic Butterfly"
+    "animal_butterfly": "Magic Butterfly",
+    "scoreCrowns": "Crowns",
+    "prestigeTitle": "Epic Achievement! 👑",
+    "prestigeDesc": "You conquered the entire kingdom! Do you want to start a new mission and earn a crown?",
+    "prestigeBtn": "Start New Kingdom",
+    "crownEarned": "You earned a crown! 👑"
 }

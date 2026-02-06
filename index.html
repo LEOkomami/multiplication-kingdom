@@ -81,6 +81,10 @@
               <div class="k" data-t="scoreAnimals">חיות</div>
               <div class="v" id="animalsCount">0</div>
             </div>
+            <div class="stat" id="crownsStat" style="display:none;">
+              <div class="k" data-t="scoreCrowns">מלכות</div>
+              <div class="v" id="crownsCount">0</div>
+            </div>
           </div>
 
           <div class="panel">
@@ -261,6 +265,13 @@
     <div class="successTitle" data-t="successTitle">⭐ מעולה! ⭐</div>
     <div class="successExpr mathExpr" id="successOverlayExpr">2 × 2 = 4</div>
     <div class="successPoints" id="successOverlayPoints">+1 נקודות</div>
+    <div id="prestigeSection" style="display:none; margin-top:20px; text-align:center; animation: fadeIn 0.8s ease;">
+      <h3 data-t="prestigeTitle">הישג ענק! 👑</h3>
+      <p class="note" data-t="prestigeDesc" style="font-size:16px;">כבשת את כל הממלכה! רוצה להתחיל משימה חדשה ולקבל כתר?
+      </p>
+      <button class="btn primary" id="prestigeBtn" data-t="prestigeBtn"
+        style="margin-top:10px; font-size:18px; padding:12px 24px;">התחל ממלכה חדשה</button>
+    </div>
   </div>
 
   <footer
@@ -328,6 +339,10 @@
         successOverlay: document.getElementById("successOverlay"),
         successOverlayExpr: document.getElementById("successOverlayExpr"),
         successOverlayPoints: document.getElementById("successOverlayPoints"),
+        crownsCount: document.getElementById("crownsCount"),
+        crownsStat: document.getElementById("crownsStat"),
+        prestigeSection: document.getElementById("prestigeSection"),
+        prestigeBtn: document.getElementById("prestigeBtn"),
       };
       els.feedback = document.getElementById("feedback") || {};
 
@@ -944,6 +959,7 @@
           closeWelcome();
         });
         els.dontShowWelcomeRow.addEventListener("click", toggleDontShowWelcome);
+        els.prestigeBtn.addEventListener("click", startNewKingdom);
 
         // Language Dropdowns
         els.langSelect = document.getElementById("langSelect");
@@ -972,7 +988,8 @@
             points: 0,
           },
           done: {},
-          animals: []
+          animals: [],
+          crowns: 0
         };
       }
 
@@ -1199,6 +1216,12 @@
         els.streak.textContent = p ? String(p.stats.streak) : "0";
         els.totalPoints.textContent = p ? String(p.stats.points || 0) : "0";
         els.animalsCount.textContent = p ? String(p.animals.length) : "0";
+        if (p && p.crowns > 0) {
+          els.crownsStat.style.display = "flex";
+          els.crownsCount.textContent = String(p.crowns);
+        } else {
+          els.crownsStat.style.display = "none";
+        }
 
         els.maxN.value = String(state.maxN);
         els.toggleSoundBtn.textContent = state.soundEnabled ? "🔊" : "🔇";
@@ -1235,6 +1258,13 @@
           highlightCurrentCell();
           updateUI();
           save();
+
+          // Show Prestige Option
+          els.successOverlayExpr.textContent = "🏆 100% 🏆";
+          els.successOverlayPoints.textContent = t("crownEarned");
+          els.prestigeSection.style.display = "block";
+          els.successOverlay.style.display = "flex";
+          triggerConfetti();
           return;
         }
 
@@ -1532,6 +1562,23 @@
           `;
           els.leaderboardList.appendChild(d);
         });
+      }
+
+      function startNewKingdom() {
+        const p = getActiveProfile();
+        if (!p) return;
+
+        p.crowns = (p.crowns || 0) + 1;
+        p.done = {};
+        p.animals = [];
+
+        els.prestigeSection.style.display = "none";
+        els.successOverlay.style.display = "none";
+
+        save();
+        buildGrid();
+        updateUI();
+        newRound();
       }
 
       function init() {
