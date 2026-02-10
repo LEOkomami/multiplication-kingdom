@@ -811,6 +811,21 @@
         }
       };
 
+      function closeModalWithAnimation(modalEl, onComplete) {
+        if (!modalEl) return;
+        modalEl.classList.add("closing");
+        const modalContent = modalEl.querySelector(".modal");
+        if (modalContent) modalContent.classList.add("closing");
+
+        setTimeout(() => {
+          modalEl.style.display = "none";
+          modalEl.classList.remove("closing");
+          if (modalContent) modalContent.classList.remove("closing");
+          modalEl.setAttribute("aria-hidden", "true");
+          if (onComplete) onComplete();
+        }, 300);
+      }
+
       function startQuest(a, b) {
         const key = cellKey(a, b);
         const animal = getNextAnimalFor(key);
@@ -827,24 +842,39 @@
 
         game.run(els.questContainer, () => {
           setTimeout(() => {
-            const typed = Number(els.bonusAnswerInput.value.trim());
-            const isCorrect = !Number.isNaN(typed) && typed === (a * b);
+            const val = els.bonusAnswerInput.value.trim();
+            const typed = val === "" ? NaN : Number(val);
+            // logic: empty => skipped (no bonus), correct => +3, wrong => +1 but with error msg
+            const bonusCorrect = !Number.isNaN(typed) && typed === (a * b);
+            const bonusWrong = !Number.isNaN(typed) && typed !== (a * b);
 
-            showSuccessOverlay(a, b, isCorrect ? 3 : 1);
+            const points = bonusCorrect ? 3 : 1;
+            showSuccessOverlay(a, b, points, bonusWrong);
+
+            // Longer delay if there is an error message to read
+            const delay = bonusWrong ? 6000 : 2500;
 
             setTimeout(() => {
-              els.challengeModal.style.display = "none";
-              markDone(a, b, animal, isCorrect);
-              save();
-              newRound();
-            }, 2000);
+              closeModalWithAnimation(els.challengeModal, () => {
+                // markDone adds 3 if bonusCorrect is true, 1 otherwise
+                markDone(a, b, animal, bonusCorrect);
+                save();
+                newRound();
+              });
+            }, delay);
           }, 1000);
         }, animal);
       }
 
-      function showSuccessOverlay(a, b, points) {
+      function showSuccessOverlay(a, b, points, bonusWrong) {
         els.successOverlayExpr.textContent = `${a} × ${b} = ${a * b}`;
-        els.successOverlayPoints.textContent = t("successPoints", { n: points });
+
+        if (bonusWrong) {
+          els.successOverlayPoints.innerHTML = `<span style="color:var(--bad); display:block; margin-bottom:10px;">${t("bonusWrongMsg", { n: a * b })}</span>+1 ${t("scorePoints")}`;
+        } else {
+          els.successOverlayPoints.textContent = t("successPoints", { n: points });
+        }
+
         els.successOverlay.style.display = "flex";
         triggerConfetti();
         setTimeout(() => {
@@ -1357,8 +1387,7 @@
       }
 
       function closeProfilesModal() {
-        els.modalBack.style.display = "none";
-        els.modalBack.setAttribute("aria-hidden", "true");
+        closeModalWithAnimation(els.modalBack);
       }
 
       function renderProfilesModal() {
@@ -1401,7 +1430,10 @@
               state.activeProfileId = id;
               applyProfileSettingsToGlobal();
               save();
+              applyProfileSettingsToGlobal();
+              save();
               closeProfilesModal();
+              buildGrid();
               buildGrid();
               updateUI();
               setFeedback(t('feedbackWelcome') + (getActiveProfile()?.name || ""), "neutral");
@@ -1474,8 +1506,7 @@
       }
 
       function closeKingdomModal() {
-        els.kingdomModal.style.display = "none";
-        els.kingdomModal.setAttribute("aria-hidden", "true");
+        closeModalWithAnimation(els.kingdomModal);
       }
 
       function renderKingdomModal() {
@@ -1513,12 +1544,12 @@
       }
 
       function closeWelcome() {
-        els.welcomeModal.style.display = "none";
-        els.welcomeModal.setAttribute("aria-hidden", "true");
-        if (dontShowWelcomeState) {
-          localStorage.setItem(STORAGE_KEY + "_skipWelcome", "true");
-        }
-        openProfilesModal();
+        closeModalWithAnimation(els.welcomeModal, () => {
+          if (dontShowWelcomeState) {
+            localStorage.setItem(STORAGE_KEY + "_skipWelcome", "true");
+          }
+          openProfilesModal();
+        });
       }
 
       function toggleDontShowWelcome() {
@@ -1539,7 +1570,7 @@
       }
 
       function closeLeaderboard() {
-        els.leaderboardModal.style.display = "none";
+        closeModalWithAnimation(els.leaderboardModal);
       }
 
       function renderLeaderboard() {

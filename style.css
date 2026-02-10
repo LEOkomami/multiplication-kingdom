@@ -482,9 +482,19 @@ select {
     }
 }
 
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 @keyframes modalSlide {
     from {
-        transform: translateY(30px) scale(0.95);
+        transform: translateY(20px) scale(0.95);
         opacity: 0;
     }
 
@@ -492,6 +502,26 @@ select {
         transform: translateY(0) scale(1);
         opacity: 1;
     }
+}
+
+@keyframes modalSlideOut {
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+    }
+}
+
+.modalBack.closing {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+.modal.closing {
+    animation: modalSlideOut 0.3s ease forwards;
 }
 
 .modal .mhd {
