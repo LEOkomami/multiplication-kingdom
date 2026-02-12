@@ -1,4 +1,4 @@
-const CACHE_NAME = 'multi-kingdom-v21';
+const CACHE_NAME = 'multi-kingdom-v26';
 const ASSETS = [
     './',
     './index.html',

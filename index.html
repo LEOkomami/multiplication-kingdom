@@ -39,6 +39,7 @@
         <button class="btn" id="leaderboardBtn" data-t="leaderboardBtn" type="button">טבלת האלופים</button>
         <button class="btn" id="profilesBtn" data-t="profilesBtn" type="button">פרופילים</button>
         <button class="btn danger" id="resetProfileBtn" data-t="resetBtn" type="button">איפוס פרופיל</button>
+        <button class="btn icon help" id="helpBtn" title="עזרה" type="button">?</button>
       </div>
     </div>
   </header>
@@ -87,6 +88,7 @@
             </div>
           </div>
 
+
           <div class="panel">
             <div class="qTop">
               <div class="pill">אוסף חיות הפנטזיה</div>
@@ -109,7 +111,8 @@
         </div>
       </div>
       <div class="mbd">
-        <div class="note" style="font-size: 18px; line-height: 1.5; font-weight: 700; color: var(--text);">
+        <div class="note" style="font-size: 18px; line-height: 1.5; font-weight: 700; color: var(--text);"
+          data-t="profileNote">
           לכל פרופיל יש התקדמות ואוסף נפרדים. זה נשמר על המחשב הזה בלבד.
         </div>
 
@@ -150,6 +153,13 @@
     <div class="modal" style="width: min(550px, 100%);" role="dialog" aria-modal="true">
       <div class="mhd">
         <div class="pill" id="questTitle">אתגר קסום</div>
+        <button class="btn icon help tiny" id="qHelpBtn" type="button">?</button>
+      </div>
+      <div id="qHelpContent"
+        style="display:none; padding:15px; background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); text-align:right; font-size:14px; color:var(--text);">
+        <div id="qHelpText" style="margin-bottom:10px; font-weight:800;"></div>
+        <div style="font-weight:1000; color:var(--accent);" data-t="helpBonusInfo">בונוס: פתרו את תרגיל הכפל בתחילת
+          האתגר כדי לקבל 3 נקודות במקום 1!</div>
       </div>
       <div class="mbd" style="text-align:center;">
         <div id="questExpr" class="mathExpr">?</div>
@@ -261,6 +271,34 @@
     </div>
   </div>
 
+  <div class="modalBack" id="helpModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Help">
+      <div class="mhd">
+        <div class="pill" data-t="helpTitle">איך משחקים?</div>
+        <div class="controls">
+          <button class="btn" id="closeHelpBtn" data-t="closeBtn" type="button">סגור</button>
+        </div>
+      </div>
+      <div class="mbd" style="max-height: 70vh; overflow-y: auto; text-align: right;">
+        <div style="margin-bottom:20px;">
+          <h3 style="color:var(--accent); margin-bottom:10px;" data-t="helpIntroTitle">איך משחקים?</h3>
+          <p style="line-height:1.6;" data-t="helpIntroText">בממלכה הזו, כל תא בלוח הכפל הוא אתגר. המטרה שלכם היא לכבוש
+            את כל הלוח!</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="color:var(--accent); margin-bottom:10px;" data-t="helpPointsTitle">שיטת הנקודות</h3>
+          <p style="line-height:1.6;" data-t="helpPointsText">• תשובה נכונה באתגר = 1 נקודה. <br>• פתרון הבונוס (תחילת
+            האתגר) = 3 נקודות.</p>
+        </div>
+        <div>
+          <h3 style="color:var(--accent); margin-bottom:10px;" data-t="helpPrestigeTitle">כתרים ומלכות</h3>
+          <p style="line-height:1.6;" data-t="helpPrestigeText">כשמשלימים 100% מהלוח, זוכים בכתר. אפשר לאפס את הלוח
+            ולהתחיל מחדש!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="successOverlay">
     <div class="successTitle" data-t="successTitle">⭐ מעולה! ⭐</div>
     <div class="successExpr mathExpr" id="successOverlayExpr">2 × 2 = 4</div>
@@ -330,6 +368,13 @@
         leaderboardModal: document.getElementById("leaderboardModal"),
         leaderboardList: document.getElementById("leaderboardList"),
         closeLeaderboardBtn: document.getElementById("closeLeaderboardBtn"),
+
+        helpBtn: document.getElementById("helpBtn"),
+        helpModal: document.getElementById("helpModal"),
+        closeHelpBtn: document.getElementById("closeHelpBtn"),
+        qHelpBtn: document.getElementById("qHelpBtn"),
+        qHelpContent: document.getElementById("qHelpContent"),
+        qHelpText: document.getElementById("qHelpText"),
 
         welcomeModal: document.getElementById("welcomeModal"),
         startGameBtn: document.getElementById("startGameBtn"),
@@ -835,6 +880,8 @@
         els.questTitle.textContent = t(game.titleKey);
         els.questExpr.textContent = `${a} × ${b}`;
         els.questInstruction.textContent = t(game.instrKey);
+        els.qHelpText.textContent = t("help_" + (game.id || Object.keys(questGames).find(k => questGames[k] === game)));
+        els.qHelpContent.style.display = "none";
         els.questContainer.innerHTML = "";
         els.bonusAnswerInput.value = "";
         els.finishChallengeBtn.style.display = "none";
@@ -988,6 +1035,15 @@
           initAudio();
           closeWelcome();
         });
+
+        els.helpBtn.addEventListener("click", openHelpModal);
+        els.closeHelpBtn.addEventListener("click", closeHelpModal);
+        els.helpModal.addEventListener("click", (e) => {
+          if (e.target === els.helpModal) closeHelpModal();
+        });
+
+        els.qHelpBtn.addEventListener("click", toggleQHelp);
+
         els.dontShowWelcomeRow.addEventListener("click", toggleDontShowWelcome);
         els.prestigeBtn.addEventListener("click", startNewKingdom);
 
@@ -1097,7 +1153,7 @@
       function buildGrid() {
         const p = getActiveProfile();
         const n = state.maxN;
-        els.grid.style.gridTemplateColumns = `64px repeat(${n}, 1fr)`;
+        els.grid.style.gridTemplateColumns = `repeat(${n + 1}, 1fr)`;
         els.grid.innerHTML = "";
 
         const make = (text, cls) => {
@@ -1610,6 +1666,20 @@
         buildGrid();
         updateUI();
         newRound();
+      }
+
+      function toggleQHelp() {
+        const isHidden = els.qHelpContent.style.display === "none";
+        els.qHelpContent.style.display = isHidden ? "block" : "none";
+      }
+
+      function openHelpModal() {
+        els.helpModal.style.display = "flex";
+        els.helpModal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeHelpModal() {
+        closeModalWithAnimation(els.helpModal);
       }
 
       function init() {
