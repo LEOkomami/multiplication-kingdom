@@ -894,6 +894,7 @@
         els.bonusAnswerInput.value = "";
         els.finishChallengeBtn.style.display = "none";
         els.challengeModal.style.display = "flex";
+        gtag('event', 'level_start', { level_name: `${a}x${b}`, max_n: state.maxN });
 
         game.run(els.questContainer, () => {
           setTimeout(() => {
@@ -983,6 +984,8 @@
         // Update Direction
         document.documentElement.lang = lang;
         document.documentElement.dir = translations[lang].dir;
+
+        gtag('event', 'change_language', { language: lang });
 
         // Update Text
         document.querySelectorAll("[data-t]").forEach(el => {
@@ -1278,6 +1281,7 @@
         const p = getActiveProfile();
         if (!p) return;
         p.animals.push(animal);
+        gtag('event', 'unlock_animal', { item_id: animal.emoji, item_name: getAnimalName(animal) });
       }
 
       function renderCollection() {
@@ -1381,6 +1385,9 @@
 
         if (!p.stats.points) p.stats.points = 0;
         p.stats.points += (bonus ? 3 : 1);
+
+        gtag('event', 'level_end', { level_name: `${a}x${b}`, success: true });
+        gtag('event', 'earn_virtual_currency', { value: (bonus ? 3 : 1), virtual_currency_name: "points" });
 
         buildGrid();
         updateUI();
@@ -1539,6 +1546,8 @@
         state.profiles[p.id] = p;
         state.activeProfileId = p.id;
 
+        gtag('event', 'sign_up', { method: "profile_creation" });
+
         els.newProfileName.value = "";
         save();
 
@@ -1566,6 +1575,7 @@
         initAudio(); // Unlock audio on user interaction
         els.kingdomModal.style.display = "flex";
         els.kingdomModal.setAttribute("aria-hidden", "false");
+        gtag('event', 'view_item_list', { item_list_name: "Kingdom" });
         renderKingdomModal();
       }
 
@@ -1666,6 +1676,8 @@
         p.crowns = (p.crowns || 0) + 1;
         p.done = {};
         p.animals = [];
+
+        gtag('event', 'prestige', { crowns_count: p.crowns });
 
         els.prestigeSection.style.display = "none";
         els.successOverlay.style.display = "none";
