@@ -31,5 +31,12 @@ Instead of just entering numbers, every cell on the grid is a visual "Quest":
 - **Complete Privacy**: No data collection, no accounts, and no cloud uploads.
 - **Tech Stack**: Vanilla JS, HTML5 Canvas, CSS3 Grid, Service Workers.
 
-## 🛠️ Deployment
-Pre-configured for **GitHub Pages** using GitHub Actions. Any code push deploys to the web automatically within minutes.
+## ☕ Support
+If you enjoy this game, feel free to support its development:
+[Buy me a coffee ☕](https://buymeacoffee.com/leokonami)
+
+## 📜 License
+This project is licensed under the **MIT License**. You are free to use, fork, and modify the code as long as you include the original copyright notice. See the [LICENSE](LICENSE) file for details.
+
+---
+A KONAMI APP © 2026
